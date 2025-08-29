@@ -1,0 +1,58 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.mood-emoji {
+    font-size: 2rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.mood-emoji:hover {
+    transform: scale(1.2);
+}
+
+.breathing-circle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: #4a89dc;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    transition: all 0.5s ease-in-out;
+}
+
+.sos-resource {
+    border-left: 4px solid #dc3545;
+}
+
+.habit-progress {
+    height: 10px;
+}
+
+.journal-entry {
+    border-left: 4px solid #0d6efd;
+    padding-left: 15px;
+    margin-bottom: 15px;
+}
+
+.affirmation {
+    font-style: italic;
+    color: #6c757d;
+}
