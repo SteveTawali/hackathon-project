@@ -56,3 +56,11 @@ class HabitLog(db.Model):
     value = db.Column(db.Integer, default=1)
     completed = db.Column(db.Boolean, default=False)
     logged_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class CommunityPost(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    author = db.Column(db.String(100), nullable=False, default='Anonymous')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    # Optional: Add user_id foreign key if you want to link posts to registered users
+    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)

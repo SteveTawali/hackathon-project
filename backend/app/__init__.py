@@ -23,6 +23,7 @@ def create_app():
     from app.habits import habits_bp
     from app.dashboard import dashboard_bp
     from app.ai_integration import ai_bp
+    from app.community import community_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(mood_bp, url_prefix='/api/mood')
@@ -30,6 +31,7 @@ def create_app():
     app.register_blueprint(habits_bp, url_prefix='/api/habits')
     app.register_blueprint(dashboard_bp, url_prefix='/api/dashboard')
     app.register_blueprint(ai_bp, url_prefix='/api/ai')
+    app.register_blueprint(community_bp, url_prefix='/api/community')
     
     # Add root route and health check
     @app.route('/')
@@ -44,7 +46,8 @@ def create_app():
                 'journal': '/api/journal',
                 'habits': '/api/habits',
                 'dashboard': '/api/dashboard',
-                'ai': '/api/ai'
+                'ai': '/api/ai',
+                'community': '/api/community'
             }
         })
     
