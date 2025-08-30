@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: mindwell-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python3 run.py
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: DATABASE_URL
+        value: mysql+pymysql://calmflow_user:CalmFlow123!@localhost:3306/calmflow_mindspace
