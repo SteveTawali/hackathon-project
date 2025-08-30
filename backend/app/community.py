@@ -6,6 +6,7 @@ from datetime import datetime
 community_bp = Blueprint('community', __name__)
 
 @community_bp.route('/posts', methods=['GET'])
+@jwt_required()
 def get_posts():
     """Get all community posts"""
     try:
@@ -20,9 +21,11 @@ def get_posts():
         return jsonify({'error': 'Failed to fetch posts', 'message': str(e)}), 500
 
 @community_bp.route('/posts', methods=['POST'])
+@jwt_required()
 def create_post():
     """Create a new community post"""
     try:
+        user_id = int(get_jwt_identity())
         data = request.get_json()
         
         if not data or not data.get('content'):
@@ -35,10 +38,15 @@ def create_post():
         if len(content) > 1000:
             return jsonify({'error': 'Content too long (max 1000 characters)'}), 400
         
+        # Get username from user data or use provided author
+        from app.models import User
+        user = User.query.get(user_id)
+        author_name = user.username if user else data.get('author', 'Anonymous')
+        
         # Create new post
         post = CommunityPost(
             content=content,
-            author=data.get('author', 'Anonymous'),
+            author=author_name,
             created_at=datetime.utcnow()
         )
         
