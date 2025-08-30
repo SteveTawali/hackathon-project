@@ -10,28 +10,40 @@ const SOSSupport = () => {
 
   const emergencyContacts = [
     {
-      name: "National Suicide Prevention Lifeline",
-      number: "988",
-      description: "24/7 crisis support",
+      name: "Kenya Emergency Services",
+      number: "999 / 112",
+      description: "National emergency hotline",
       type: "emergency"
     },
     {
-      name: "Crisis Text Line",
-      number: "Text HOME to 741741",
-      description: "Text-based crisis support",
+      name: "Kenya Red Cross Society",
+      number: "1199",
+      description: "Emergency response and crisis support",
+      type: "emergency"
+    },
+    {
+      name: "Befrienders Kenya",
+      number: "+254 722 178 177",
+      description: "24/7 emotional support and suicide prevention",
+      type: "support"
+    },
+    {
+      name: "Mental Health Kenya",
+      number: "+254 722 518 497",
+      description: "Mental health support and counseling",
+      type: "support"
+    },
+    {
+      name: "Kenya Association of Professional Counsellors",
+      number: "+254 20 3877195",
+      description: "Professional counseling referrals",
+      type: "support"
+    },
+    {
+      name: "Samaritans of Kenya",
+      number: "+254 722 277 277",
+      description: "Confidential emotional support",
       type: "text"
-    },
-    {
-      name: "NAMI HelpLine",
-      number: "1-800-950-NAMI",
-      description: "Mental health information and support",
-      type: "support"
-    },
-    {
-      name: "SAMHSA Helpline",
-      number: "1-800-662-4357",
-      description: "Treatment referrals and information",
-      type: "support"
     }
   ];
 
@@ -143,11 +155,11 @@ const SOSSupport = () => {
             <div className="grid md:grid-cols-2 gap-4">
               <Button className="bg-emergency hover:bg-emergency/90" size="lg">
                 <Phone className="h-4 w-4 mr-2" />
-                Call 988 - Suicide & Crisis Lifeline
+                Call 999 or 112 - Emergency Services
               </Button>
               <Button variant="outline" className="border-emergency text-emergency" size="lg">
                 <MessageCircle className="h-4 w-4 mr-2" />
-                Text HOME to 741741
+                Call +254 722 178 177 - Befrienders Kenya
               </Button>
             </div>
           </CardContent>

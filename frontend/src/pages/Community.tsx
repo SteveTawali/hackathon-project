@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-// Replace with your backend API endpoints
-const POSTS_API = "/api/posts";
-const CREATE_POST_API = "/api/posts";
+// Backend API endpoints
+const API_BASE_URL = "http://localhost:5001";
+const POSTS_API = `${API_BASE_URL}/api/community/posts`;
+const CREATE_POST_API = `${API_BASE_URL}/api/community/posts`;
 
 const Community = () => {
   const [posts, setPosts] = useState([]);
@@ -15,14 +16,26 @@ const Community = () => {
   // Fetch posts from backend
   useEffect(() => {
     setLoading(true);
-    fetch(POSTS_API)
-      .then(res => res.json())
+    fetch(POSTS_API, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
       .then(data => {
-        setPosts(data);
+        // Handle both array response or object with posts array
+        setPosts(Array.isArray(data) ? data : data.posts || []);
         setLoading(false);
       })
-      .catch(() => {
-        setError("Failed to load posts.");
+      .catch((err) => {
+        console.error('Error fetching posts:', err);
+        setError("Failed to load posts. Backend might not be running.");
         setLoading(false);
       });
   }, []);
@@ -36,15 +49,27 @@ const Community = () => {
     try {
       const res = await fetch(CREATE_POST_API, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: newPost })
+        headers: { 
+          "Content-Type": "application/json",
+          // Add auth header if you have JWT token stored
+          // "Authorization": `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ 
+          content: newPost,
+          author: "Anonymous", // You can get this from user context
+          createdAt: new Date().toISOString()
+        })
       });
-      if (!res.ok) throw new Error("Failed to post");
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || `HTTP error! status: ${res.status}`);
+      }
       const created = await res.json();
       setPosts([created, ...posts]);
       setNewPost("");
-    } catch {
-      setError("Failed to create post.");
+    } catch (err: any) {
+      console.error('Error creating post:', err);
+      setError(err.message || "Failed to create post. Check if backend is running.");
     }
     setLoading(false);
   };
