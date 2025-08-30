@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["python3", "python3Packages.pip", "mysql"]
+
+[phases.install]
+cmds = ["cd backend && pip install -r requirements.txt"]
+
+[phases.build]
+cmds = ["echo 'Build completed'"]
+
+[start]
+cmd = "cd backend && python3 run.py"
