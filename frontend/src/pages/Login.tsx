@@ -1,22 +1,48 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { login, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Redirect if already authenticated
+  if (isAuthenticated) {
+    const from = location.state?.from?.pathname || "/dashboard";
+    navigate(from, { replace: true });
+    return null;
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simple validation
     if (!email || !password) {
       setError("Please enter both email and password.");
       return;
     }
+
+    setLoading(true);
     setError("");
-    // Add login logic here
-    alert("Login successful (demo)");
+
+    try {
+      const success = await login(email, password);
+      if (success) {
+        const from = location.state?.from?.pathname || "/dashboard";
+        navigate(from, { replace: true });
+      } else {
+        setError("Invalid email or password. Please try again.");
+      }
+    } catch (err) {
+      setError("Login failed. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -59,11 +85,13 @@ const Login = () => {
               />
             </div>
             {error && <div className="text-red-500 text-sm">{error}</div>}
-            <Button type="submit" className="w-full text-lg">Login</Button>
+            <Button type="submit" className="w-full text-lg" disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
+            </Button>
           </form>
           <div className="mt-6 text-center">
             <span className="text-muted-foreground">Don't have an account?</span>
-            <a href="/register" className="ml-2 text-primary font-medium hover:underline">Register</a>
+            <Link to="/register" className="ml-2 text-primary font-medium hover:underline">Register</Link>
           </div>
         </CardContent>
       </Card>
