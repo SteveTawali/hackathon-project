@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // Backend API endpoints
-const API_BASE_URL = "http://localhost:5001";
-const POSTS_API = `${API_BASE_URL}/api/community/posts`;
-const CREATE_POST_API = `${API_BASE_URL}/api/community/posts`;
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+const POSTS_API = `${API_BASE_URL}/community/posts`;
+const CREATE_POST_API = `${API_BASE_URL}/community/posts`;
 
 const Community = () => {
   const [posts, setPosts] = useState([]);
