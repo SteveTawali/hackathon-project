@@ -313,7 +313,7 @@ const SOSSupport = () => {
               <Button type="submit" className="w-full">Send Message</Button>
             </form>
             <div className="mt-6 text-center text-muted-foreground text-sm">
-              <p>Or email us directly: <a href="mailto:support@mindwell.com" className="text-primary hover:underline">support@mindwell.com</a></p>
+              <p>We're here to help and support you through your mental wellness journey.</p>
             </div>
           </CardContent>
         </Card>
