@@ -24,7 +24,7 @@ if [ "$CURRENT_BRANCH" = "frontend" ]; then
     echo "Starting frontend in 3 seconds..."
     sleep 3
     
-    cd frontend
+    cd ../frontend
     npm run dev
     
 elif [ "$CURRENT_BRANCH" = "backend" ]; then
@@ -34,7 +34,7 @@ elif [ "$CURRENT_BRANCH" = "backend" ]; then
     echo "📋 You'll need to start the frontend separately on the 'frontend' branch"
     echo ""
     echo "Starting backend..."
-    cd backend
+    cd ../backend
     python3 run.py
     
 else
