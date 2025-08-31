@@ -15,6 +15,7 @@ const Journal = () => {
   const [content, setContent] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [promptsUsed, setPromptsUsed] = useState(0);
+  const [expandedEntries, setExpandedEntries] = useState<Set<number>>(new Set());
   const { toast } = useToast();
 
   // Check if user is premium
@@ -145,6 +146,23 @@ const Journal = () => {
       title: "Exporting data...",
       description: "Your journal entries are being prepared for download.",
     });
+  };
+
+  const toggleEntryExpansion = (entryId: number) => {
+    setExpandedEntries(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(entryId)) {
+        newSet.delete(entryId);
+      } else {
+        newSet.add(entryId);
+      }
+      return newSet;
+    });
+  };
+
+  const getTruncatedContent = (content: string, maxLength: number = 150) => {
+    if (content.length <= maxLength) return content;
+    return content.substring(0, maxLength) + '...';
   };
 
   return (
@@ -304,24 +322,35 @@ const Journal = () => {
 
             {/* Entries List */}
             <div className="space-y-4">
-              {entries.map((entry) => (
-                <div key={entry.id} className="p-6 rounded-lg border bg-card hover:shadow-medium transition-shadow">
-                  <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-lg font-semibold">{entry.title}</h3>
-                    <div className="flex items-center gap-2">
-                      <Badge className={getSentimentColor(entry.sentiment)}>
-                        {entry.sentiment}
-                      </Badge>
-                      <span className="text-sm text-muted-foreground">{entry.date}</span>
+              {entries.map((entry) => {
+                const isExpanded = expandedEntries.has(entry.id);
+                const displayContent = isExpanded ? entry.content : getTruncatedContent(entry.content);
+                
+                return (
+                  <div key={entry.id} className="p-6 rounded-lg border bg-card hover:shadow-medium transition-shadow">
+                    <div className="flex justify-between items-start mb-3">
+                      <h3 className="text-lg font-semibold">{entry.title}</h3>
+                      <div className="flex items-center gap-2">
+                        <Badge className={getSentimentColor(entry.sentiment)}>
+                          {entry.sentiment}
+                        </Badge>
+                        <span className="text-sm text-muted-foreground">{entry.date}</span>
+                      </div>
+                    </div>
+                    <p className="text-muted-foreground mb-3">{displayContent}</p>
+                    <div className="flex justify-between items-center text-xs text-muted-foreground">
+                      <span>{entry.wordCount} words</span>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => toggleEntryExpansion(entry.id)}
+                      >
+                        {isExpanded ? 'Read Less' : 'Read More'}
+                      </Button>
                     </div>
                   </div>
-                  <p className="text-muted-foreground mb-3">{entry.content}</p>
-                  <div className="flex justify-between items-center text-xs text-muted-foreground">
-                    <span>{entry.wordCount} words</span>
-                    <Button variant="ghost" size="sm">Read More</Button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </CardContent>
         </Card>
