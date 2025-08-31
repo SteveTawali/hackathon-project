@@ -37,7 +37,7 @@ def create_app():
     @app.route('/')
     def index():
         return jsonify({
-            'message': 'CalmFlow MindSpace Backend API',
+            'message': 'MindWell Backend API',
             'status': 'running',
             'version': '1.0.0',
             'endpoints': {
