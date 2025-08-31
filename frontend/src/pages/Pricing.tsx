@@ -95,7 +95,18 @@ const Pricing = () => {
   };
 
   const handlePayment = () => {
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to make a payment.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!config.payment.paystackPublicKey) {
+      console.error('Paystack key missing:', config.payment.paystackPublicKey);
       toast({
         title: "Configuration Error",
         description: "Payment service is not configured. Please contact support.",
@@ -104,16 +115,51 @@ const Pricing = () => {
       return;
     }
 
+    console.log('Payment config:', paystackConfig);
     setProcessingPlan('premium');
-    // Use Paystack directly without the hook to avoid configuration issues
-    const script = document.createElement('script');
-    script.src = 'https://js.paystack.co/v1/inline.js';
-    script.onload = () => {
-      // @ts-ignore
-      const handler = PaystackPop.setup(paystackConfig);
-      handler.openIframe();
-    };
-    document.body.appendChild(script);
+    
+    try {
+      // Use Paystack directly without the hook to avoid configuration issues
+      const script = document.createElement('script');
+      script.src = 'https://js.paystack.co/v1/inline.js';
+      script.onload = () => {
+        try {
+          // @ts-ignore
+          if (typeof PaystackPop === 'undefined') {
+            throw new Error('PaystackPop not loaded');
+          }
+          // @ts-ignore
+          const handler = PaystackPop.setup(paystackConfig);
+          handler.openIframe();
+        } catch (error) {
+          console.error('Paystack setup error:', error);
+          setProcessingPlan(null);
+          toast({
+            title: "Payment Error",
+            description: "Failed to initialize payment. Please try again.",
+            variant: "destructive",
+          });
+        }
+      };
+      script.onerror = () => {
+        console.error('Failed to load Paystack script');
+        setProcessingPlan(null);
+        toast({
+          title: "Payment Error",
+          description: "Failed to load payment service. Please try again.",
+          variant: "destructive",
+        });
+      };
+      document.body.appendChild(script);
+    } catch (error) {
+      console.error('Payment initialization error:', error);
+      setProcessingPlan(null);
+      toast({
+        title: "Payment Error",
+        description: "Failed to initialize payment. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
 
