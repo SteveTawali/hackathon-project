@@ -17,6 +17,10 @@ import {
 } from "lucide-react";
 
 const Index = () => {
+  // Check if user is authenticated
+  const isAuthenticated = localStorage.getItem('authToken');
+  const userName = localStorage.getItem('userName') || localStorage.getItem('userEmail');
+
   const features = [
     {
       icon: Heart,
@@ -101,15 +105,29 @@ const Index = () => {
             </div>
             <div className="flex items-center gap-4">
               <Button asChild variant="ghost">
-                  <Link to="/dashboard">Dashboard</Link>
-                </Button>
-                <Button asChild>
-                  <Link to="/register">Get Started</Link>
-                </Button>
+                <Link to="/dashboard">Dashboard</Link>
+              </Button>
+              <Button asChild>
+                <Link to="/dashboard">Get Started</Link>
+              </Button>
             </div>
           </div>
         </div>
       </nav>
+
+      {/* Welcome Banner for Logged-in Users */}
+      {isAuthenticated && (
+        <section className="bg-primary/5 border-b">
+          <div className="container mx-auto px-4 py-4">
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground">
+                Welcome back, <span className="font-medium text-primary">{userName?.split('@')[0]}</span>! 
+                Ready to continue your wellness journey?
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">
@@ -118,7 +136,7 @@ const Index = () => {
           <div className="text-center space-y-8 max-w-4xl mx-auto">
             <Badge className="mb-4" variant="secondary">
               <Sparkles className="h-3 w-3 mr-1" />
-              Your Mental Health Journey Starts Here
+              {isAuthenticated ? "Continue Your Wellness Journey" : "Your Mental Health Journey Starts Here"}
             </Badge>
             
             <h1 className="text-5xl md:text-7xl font-bold leading-tight">
@@ -129,113 +147,90 @@ const Index = () => {
               <span className="text-muted-foreground text-3xl md:text-5xl">Made Simple</span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
-              Track your mood, build healthy habits, practice mindfulness, and access support 
-              whenever you need it. Your comprehensive mental wellness companion.
-            </p>
+            {isAuthenticated ? (
+              <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
+                Welcome back, {userName?.split('@')[0]}! Continue your mental wellness journey 
+                with mood tracking, journaling, habit building, and mindfulness practices.
+              </p>
+            ) : (
+              <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
+                Track your mood, build healthy habits, practice mindfulness, and access support 
+                whenever you need it. Your comprehensive mental wellness companion.
+              </p>
+            )}
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button asChild size="lg" className="text-lg px-8 py-6">
-                <Link to="/register">
-                  Start Your Journey
-                  <ArrowRight className="h-5 w-5 ml-2" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6">
-                <Link to="/mood">
-                  Track Your Mood
-                  <Heart className="h-5 w-5 ml-2" />
-                </Link>
-              </Button>
+              {isAuthenticated ? (
+                <>
+                  <Button asChild size="lg" className="text-lg px-8 py-6">
+                    <Link to="/dashboard">
+                      Go to Dashboard
+                      <ArrowRight className="h-5 w-5 ml-2" />
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6">
+                    <Link to="/mood">
+                      Track Your Mood
+                      <Heart className="h-5 w-5 ml-2" />
+                    </Link>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button asChild size="lg" className="text-lg px-8 py-6">
+                    <Link to="/register">
+                      Start Your Journey
+                      <ArrowRight className="h-5 w-5 ml-2" />
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6">
+                    <Link to="/meditation">
+                      Try Meditation
+                      <Timer className="h-5 w-5 ml-2" />
+                    </Link>
+                  </Button>
+                </>
+              )}
             </div>
 
-            <div className="flex flex-wrap justify-center gap-8 text-sm text-muted-foreground pt-8">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>100% Free to Use</span>
+            {!isAuthenticated ? (
+              <>
+                <div className="flex flex-wrap justify-center gap-8 text-sm text-muted-foreground pt-8">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span>Unlimited Journaling</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span>5 Habits Tracking</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span>Basic AI Analysis</span>
+                  </div>
+                </div>
+                <div className="text-center mt-6">
+                  <Link to="/pricing" className="text-primary hover:underline font-medium">
+                    View all features and pricing →
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <div className="flex flex-wrap justify-center gap-8 text-sm text-muted-foreground pt-8">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span>Continue your progress</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span>Track your habits</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span>Practice mindfulness</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>Privacy Focused</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>24/7 Crisis Support</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section className="py-20 bg-muted/10">
-        <div className="container mx-auto px-4">
-          <div className="text-center space-y-4 mb-16">
-            <h2 className="text-4xl font-bold">Simple, Transparent Pricing</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Choose the plan that fits your needs. Start for free, upgrade anytime.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Free Tier */}
-            <Card className="wellness-card text-center">
-              <CardHeader>
-                <CardTitle className="text-2xl font-bold">Free</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-4xl font-bold text-primary mb-2">$0</div>
-                <CardDescription className="mb-4">Everything you need to get started on your mental wellness journey.</CardDescription>
-                <ul className="text-left mb-4 list-disc list-inside text-muted-foreground text-sm">
-                  <li>Mood Tracking</li>
-                  <li>AI-Powered Journal</li>
-                  <li>Habit Building</li>
-                  <li>Meditation & Breathing</li>
-                  <li>Wellness Dashboard</li>
-                  <li>Crisis Support (24/7)</li>
-                </ul>
-                <Button asChild className="w-full">
-                  <Link to="/register">Get Started</Link>
-                </Button>
-              </CardContent>
-            </Card>
-            {/* Pro Tier */}
-            <Card className="wellness-card text-center border-2 border-primary">
-              <CardHeader>
-                <CardTitle className="text-2xl font-bold">Pro</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-4xl font-bold text-primary mb-2">$9/mo</div>
-                <CardDescription className="mb-4">For users who want deeper insights and more control.</CardDescription>
-                <ul className="text-left mb-4 list-disc list-inside text-muted-foreground text-sm">
-                  <li>All Free features</li>
-                  <li>Advanced Analytics & Visualizations</li>
-                  <li>AI-Powered Insights & Recommendations</li>
-                  <li>Priority Support</li>
-                </ul>
-                <Button asChild className="w-full">
-                  <Link to="/register">Start Pro Trial</Link>
-                </Button>
-              </CardContent>
-            </Card>
-            {/* Premium Tier */}
-            <Card className="wellness-card text-center">
-              <CardHeader>
-                <CardTitle className="text-2xl font-bold">Premium</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-4xl font-bold text-primary mb-2">$19/mo</div>
-                <CardDescription className="mb-4">Unlock the full MindWell experience.</CardDescription>
-                <ul className="text-left mb-4 list-disc list-inside text-muted-foreground text-sm">
-                  <li>All Pro features</li>
-                  <li>1-on-1 Coaching & Support</li>
-                  <li>Exclusive Resources & Content</li>
-                  <li>Early Access to New Tools</li>
-                </ul>
-                <Button asChild className="w-full">
-                  <Link to="/register">Go Premium</Link>
-                </Button>
-              </CardContent>
-            </Card>
+            )}
           </div>
         </div>
       </section>
@@ -328,34 +323,36 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <Card className="wellness-card-gradient max-w-4xl mx-auto text-center">
-            <CardContent className="pt-12 pb-12">
-              <h2 className="text-4xl font-bold mb-6">Ready to Start Your Wellness Journey?</h2>
-              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Join thousands of people who are taking control of their mental health with MindWell. 
-                Your journey to better mental wellness starts with a single step.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button asChild size="lg" className="text-lg px-8 py-6">
-                  <Link to="/register">
-                    Get Started Now
-                    <TrendingUp className="h-5 w-5 ml-2" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6">
-                  <Link to="/sos">
-                    Need Help Now?
-                    <Shield className="h-5 w-5 ml-2" />
-                  </Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+      {/* CTA Section - Only show for non-authenticated users */}
+      {!isAuthenticated && (
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <Card className="wellness-card-gradient max-w-4xl mx-auto text-center">
+              <CardContent className="pt-12 pb-12">
+                <h2 className="text-4xl font-bold mb-6">Ready to Start Your Wellness Journey?</h2>
+                <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+                  Join thousands of people who are taking control of their mental health with MindWell. 
+                  Your journey to better mental wellness starts with a single step.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button asChild size="lg" className="text-lg px-8 py-6">
+                    <Link to="/register">
+                      Get Started Free
+                      <TrendingUp className="h-5 w-5 ml-2" />
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6">
+                    <Link to="/pricing">
+                      View Pricing
+                      <Shield className="h-5 w-5 ml-2" />
+                    </Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+      )}
 
       {/* Footer */}
       <footer className="border-t bg-card/50 py-12">
@@ -390,9 +387,9 @@ const Index = () => {
               <h4 className="font-semibold mb-4">Support</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li><Link to="/sos" className="hover:text-emergency">Crisis Support</Link></li>
-                <li><a href="#" className="hover:text-primary">Help Center</a></li>
-                <li><Link to="/community" className="hover:text-primary">Community</Link></li>
-                <li><Link to="/sos#contact-us" className="hover:text-primary">Contact Us</Link></li>
+                <li><Link to="/pricing" className="hover:text-primary">Pricing</Link></li>
+                <li><Link to="/help" className="hover:text-primary">Help Center</Link></li>
+                <li><Link to="/contact" className="hover:text-primary">Contact Us</Link></li>
               </ul>
             </div>
             
@@ -400,16 +397,21 @@ const Index = () => {
               <h4 className="font-semibold mb-4">Emergency</h4>
               <div className="space-y-2 text-sm">
                 <p className="text-emergency font-medium">In Crisis?</p>
-                <p className="text-muted-foreground">Call 988 for immediate support</p>
+                <p className="text-muted-foreground">Call Befrienders Kenya for immediate support</p>
                 <Button asChild variant="outline" size="sm" className="w-full">
                   <Link to="/sos">Get Help Now</Link>
                 </Button>
+                <p className="text-xs text-muted-foreground mt-2">
+                  <a href="tel:+254722178177" className="text-emergency hover:underline">
+                    Call: +254 722 178 177
+                  </a>
+                </p>
               </div>
             </div>
           </div>
           
           <div className="border-t mt-12 pt-8 text-center text-sm text-muted-foreground">
-            <p>© 2024 MindWell. Supporting mental health with compassion and technology.</p>
+            <p>© 2025 MindWell. Supporting mental health with compassion and technology.</p>
             <p className="mt-2">Remember: You're not alone. Help is always available.</p>
           </div>
         </div>

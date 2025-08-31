@@ -3,9 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Play, Pause, RotateCcw, Timer, Heart, Wind } from "lucide-react";
+import { Play, Pause, RotateCcw, Timer, Heart, Wind, Crown, Lock, Headphones, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Navigation from "@/components/Navigation";
+import PremiumGuard from "@/components/PremiumGuard";
 
 const Meditation = () => {
   const [isActive, setIsActive] = useState(false);
@@ -18,6 +19,9 @@ const Meditation = () => {
   const breathingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
 
+  // Check if user is premium
+  const isPremium = localStorage.getItem('userPlan') === 'premium';
+
   const durations = [
     { label: "5 min", value: 300 },
     { label: "10 min", value: 600 },
@@ -27,9 +31,19 @@ const Meditation = () => {
   ];
 
   const breathingPatterns = [
-    { label: "4-4-4-4 (Box)", value: "4-4-4-4", description: "Equal breathing" },
-    { label: "4-7-8", value: "4-7-8", description: "Relaxing breath" },
-    { label: "6-2-6-2", value: "6-2-6-2", description: "Calming rhythm" }
+    { label: "4-4-4-4 (Box)", value: "4-4-4-4", description: "Equal breathing", premium: false },
+    { label: "4-7-8", value: "4-7-8", description: "Relaxing breath", premium: false },
+    { label: "6-2-6-2", value: "6-2-6-2", description: "Calming rhythm", premium: true },
+    { label: "5-5-5-5", value: "5-5-5-5", description: "Extended box", premium: true },
+    { label: "8-4-8-4", value: "8-4-8-4", description: "Deep relaxation", premium: true }
+  ];
+
+  const guidedMeditations = [
+    { title: "Morning Mindfulness", duration: "10 min", category: "Mindfulness", premium: true },
+    { title: "Stress Relief", duration: "15 min", category: "Relaxation", premium: true },
+    { title: "Sleep Preparation", duration: "20 min", category: "Sleep", premium: true },
+    { title: "Anxiety Relief", duration: "12 min", category: "Anxiety", premium: true },
+    { title: "Self-Compassion", duration: "18 min", category: "Compassion", premium: true }
   ];
 
   const getPatternTiming = (pattern: string) => {
@@ -155,19 +169,42 @@ const Meditation = () => {
                 <label className="text-sm font-medium">Breathing Pattern</label>
                 <div className="grid gap-2">
                   {breathingPatterns.map((pattern) => (
-                    <Button
-                      key={pattern.value}
-                      variant={breathingPattern === pattern.value ? "default" : "outline"}
-                      onClick={() => setBreathingPattern(pattern.value)}
-                      className="justify-between h-auto p-3"
-                    >
-                      <div className="text-left">
-                        <div className="font-medium">{pattern.label}</div>
-                        <div className="text-xs text-muted-foreground">{pattern.description}</div>
-                      </div>
-                    </Button>
+                    <div key={pattern.value} className="relative">
+                      <Button
+                        variant={breathingPattern === pattern.value ? "default" : "outline"}
+                        onClick={() => {
+                          if (pattern.premium && !isPremium) {
+                            toast({
+                              title: "Premium Feature",
+                              description: "This breathing pattern is available for Premium users only.",
+                              variant: "destructive"
+                            });
+                            return;
+                          }
+                          setBreathingPattern(pattern.value);
+                        }}
+                        className="justify-between h-auto p-3 w-full"
+                        disabled={pattern.premium && !isPremium}
+                      >
+                        <div className="text-left">
+                          <div className="font-medium">{pattern.label}</div>
+                          <div className="text-xs text-muted-foreground">{pattern.description}</div>
+                        </div>
+                        {pattern.premium && (
+                          <Badge variant="secondary" className="text-xs">
+                            <Crown className="h-3 w-3 mr-1" />
+                            Premium
+                          </Badge>
+                        )}
+                      </Button>
+                    </div>
                   ))}
                 </div>
+                {!isPremium && (
+                  <p className="text-xs text-muted-foreground">
+                    Free users get 2 breathing patterns. Upgrade to Premium for 5 advanced patterns.
+                  </p>
+                )}
               </div>
 
               {/* Breathing Circle */}
@@ -279,6 +316,42 @@ const Meditation = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Guided Meditation Library - Premium Feature */}
+        <PremiumGuard feature="Guided Meditation Library" description="Access professional guided meditations for different needs">
+          <Card className="wellness-card">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Headphones className="h-5 w-5 text-purple-500" />
+                Guided Meditations
+              </CardTitle>
+              <CardDescription>Professional guided sessions for different needs</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {guidedMeditations.map((meditation, index) => (
+                  <div key={index} className="p-4 border rounded-lg hover:shadow-medium transition-shadow cursor-pointer">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-medium">{meditation.title}</h4>
+                      <Badge variant="secondary" className="text-xs">
+                        <Crown className="h-3 w-3 mr-1" />
+                        Premium
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-2">{meditation.category}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground">{meditation.duration}</span>
+                      <Button size="sm" variant="outline">
+                        <Play className="h-3 w-3 mr-1" />
+                        Start
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </PremiumGuard>
 
         {/* Meditation Tips */}
         <Card className="wellness-card">
