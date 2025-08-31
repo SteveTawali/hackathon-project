@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -253,10 +254,10 @@ const Journal = () => {
                     Free users get 3 prompts per day. Upgrade for unlimited access to all prompts.
                   </p>
                   <Button size="sm" variant="outline" asChild>
-                    <a href="/pricing">
+                    <Link to="/pricing">
                       <Crown className="h-4 w-4 mr-2" />
                       Upgrade to Premium
-                    </a>
+                    </Link>
                   </Button>
                 </div>
               )}

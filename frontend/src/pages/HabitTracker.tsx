@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -333,10 +334,10 @@ const HabitTracker = () => {
                 </Button>
                 {!isPremium && currentHabitCount >= 5 && (
                   <Button variant="outline" size="sm" className="w-full" asChild>
-                    <a href="/pricing">
+                    <Link to="/pricing">
                       <Crown className="h-4 w-4 mr-2" />
                       Upgrade to Premium
-                    </a>
+                    </Link>
                   </Button>
                 )}
               </div>
