@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LogIn, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import Navigation from "@/components/Navigation";
+import { API_BASE_URL } from "@/config";
+import { useToast } from "@/hooks/use-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,25 +15,56 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      // For demo purposes, accept any email/password
-      localStorage.setItem('authToken', 'demo-token');
-      localStorage.setItem('userEmail', email);
-      
-      // Set join date if it doesn't exist (for existing users)
-      if (!localStorage.getItem('userJoinDate')) {
-        localStorage.setItem('userJoinDate', Date.now().toString());
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Store the JWT token
+        localStorage.setItem('authToken', data.access_token);
+        localStorage.setItem('userEmail', email);
+        
+        // Set join date if it doesn't exist (for existing users)
+        if (!localStorage.getItem('userJoinDate')) {
+          localStorage.setItem('userJoinDate', Date.now().toString());
+        }
+        
+        toast({
+          title: "Login successful",
+          description: "Welcome back to MindWell!",
+        });
+        
+        navigate('/dashboard');
+      } else {
+        toast({
+          title: "Login failed",
+          description: data.message || "Invalid email or password",
+          variant: "destructive",
+        });
       }
-      
+    } catch (error) {
+      console.error('Login error:', error);
+      toast({
+        title: "Login failed",
+        description: "Network error. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-      navigate('/dashboard');
-    }, 1000);
+    }
   };
 
   return (
@@ -99,21 +132,14 @@ const Login = () => {
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Signing in..." : "Sign In"}
               </Button>
-            </form>
-            
-            <div className="mt-6 text-center space-y-2">
-              <p className="text-sm text-muted-foreground">
-                Don't have an account?{" "}
+              
+              <div className="text-center text-sm">
+                <span className="text-muted-foreground">Don't have an account? </span>
                 <Link to="/register" className="text-primary hover:underline">
-                  Create one
+                  Sign up
                 </Link>
-              </p>
-              <p className="text-sm text-muted-foreground">
-                <Link to="/" className="text-primary hover:underline">
-                  Back to Home
-                </Link>
-              </p>
-            </div>
+              </div>
+            </form>
           </CardContent>
         </Card>
       </main>

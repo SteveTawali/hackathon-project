@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UserPlus, Mail, Lock, Eye, EyeOff, User } from "lucide-react";
 import Navigation from "@/components/Navigation";
+import { API_BASE_URL } from "@/config";
+import { useToast } from "@/hooks/use-toast";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -16,27 +18,76 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (password !== confirmPassword) {
-      alert("Passwords don't match!");
+      toast({
+        title: "Passwords don't match",
+        description: "Please make sure your passwords match.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (password.length < 6) {
+      toast({
+        title: "Password too short",
+        description: "Password must be at least 6 characters long.",
+        variant: "destructive",
+      });
       return;
     }
     
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      // For demo purposes, accept any registration
-      localStorage.setItem('authToken', 'demo-token');
-      localStorage.setItem('userEmail', email);
-      localStorage.setItem('userName', name);
-      localStorage.setItem('userJoinDate', Date.now().toString()); // Set join date
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          username: name,
+          email, 
+          password 
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Store the JWT token
+        localStorage.setItem('authToken', data.access_token);
+        localStorage.setItem('userEmail', email);
+        localStorage.setItem('userName', name);
+        localStorage.setItem('userJoinDate', Date.now().toString());
+        
+        toast({
+          title: "Registration successful",
+          description: "Welcome to MindWell! Your account has been created.",
+        });
+        
+        navigate('/dashboard');
+      } else {
+        toast({
+          title: "Registration failed",
+          description: data.message || "Failed to create account. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      toast({
+        title: "Registration failed",
+        description: "Network error. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-      navigate('/dashboard');
-    }, 1000);
+    }
   };
 
   return (
@@ -100,6 +151,7 @@ const Register = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     className="pl-10 pr-10"
                     required
+                    minLength={6}
                   />
                   <Button
                     type="button"
@@ -149,21 +201,14 @@ const Register = () => {
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Creating account..." : "Create Account"}
               </Button>
-            </form>
-            
-            <div className="mt-6 text-center space-y-2">
-              <p className="text-sm text-muted-foreground">
-                Already have an account?{" "}
+              
+              <div className="text-center text-sm">
+                <span className="text-muted-foreground">Already have an account? </span>
                 <Link to="/login" className="text-primary hover:underline">
                   Sign in
                 </Link>
-              </p>
-              <p className="text-sm text-muted-foreground">
-                <Link to="/" className="text-primary hover:underline">
-                  Back to Home
-                </Link>
-              </p>
-            </div>
+              </div>
+            </form>
           </CardContent>
         </Card>
       </main>
