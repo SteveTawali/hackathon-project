@@ -2,7 +2,12 @@ import os
 from dotenv import load_dotenv
 
 # Load environment variables BEFORE importing app modules
-load_dotenv()
+# Only load .env file if it exists, don't load .env.example
+load_dotenv('.env')
+
+print("DEBUG: Environment variables after load_dotenv:")
+print(f"DEBUG: DATABASE_URL = {os.getenv('DATABASE_URL', 'NOT SET')}")
+print(f"DEBUG: All env vars: {dict(os.environ)}")
 
 from app import create_app
 
