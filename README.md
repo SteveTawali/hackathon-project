@@ -172,14 +172,19 @@ cd backend
 ## Screenshots & Demo
 
 ![Dashboard Screenshot](./screenshots/dashboard.png)
-![Mood Tracker](.screenshots/moodtracker.png)
-![Journal Screenshot](.screenshots/journal)
-![Habit Tracker](./screenshots/habittracker.png)
+![Mood Tracker](./screenshots/mood tracker.png)
+![Journal Screenshot](./screenshots/journal.png)
+![Habit Tracker](./screenshots/habit tracker.png)
 ![Meditation](./screenshots/meditation.png)
 ![Pricing](./screenshots/pricing.png)
 ![Emergency](./screenshots/emergency.png)
 
-[Live Demo](http://hackathon-project-murex.vercel.app)
+## 🚀 Live Demo
+
+**Frontend (Netlify):** [Your Netlify URL]
+**Backend API (Railway):** https://hackathon-project-production-d817.up.railway.app
+
+*Note: Replace "Your Netlify URL" with your actual Netlify deployment URL*
 
 ---
 

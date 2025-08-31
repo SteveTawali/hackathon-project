@@ -1,10 +1,16 @@
 # Production Deployment Guide
 
+## 🚀 Current Deployment
+
+**Frontend:** Deployed on Netlify
+**Backend:** Deployed on Railway  
+**Database:** MySQL on Railway
+
 ## 🔧 Environment Configuration
 
-### Backend Production Setup
+### Backend Production Setup (Railway)
 
-1. **Update `.env` file with production keys:**
+1. **Environment Variables in Railway Dashboard:**
 
 ```bash
 # Flask Configuration
@@ -12,8 +18,8 @@ FLASK_APP=run.py
 FLASK_ENV=production
 FLASK_DEBUG=False
 
-# Database Configuration
-DATABASE_URL=mysql+pymysql://calmflow_user:CalmFlow123!@localhost:3306/calmflow_mindspace
+# Database Configuration (Railway MySQL)
+DATABASE_URL=${{ MySQL.MYSQL_URL }}
 
 # Security Keys (PRODUCTION KEYS - KEEP SECURE!)
 SECRET_KEY=your-production-secret-key-here
@@ -36,15 +42,29 @@ python3 -c "import secrets; print(secrets.token_hex(32))"
 python3 -c "import secrets; print(secrets.token_hex(32))"
 ```
 
-### Frontend Production Setup
+### Frontend Production Setup (Netlify)
 
-1. **Update `.env.local` file:**
+1. **Environment Variables in Netlify Dashboard:**
+
 ```bash
 # Frontend Environment Variables
 VITE_PAYSTACK_PUBLIC_KEY=pk_live_your_production_public_key_here
-VITE_API_BASE_URL=https://your-domain.com
+VITE_API_BASE_URL=https://hackathon-project-production-d817.up.railway.app
 VITE_ENABLE_ANALYTICS=true
 VITE_ENABLE_DEBUG_MODE=false
+```
+
+2. **Netlify Configuration (netlify.toml):**
+```toml
+[build]
+  base = "frontend"
+  publish = "dist"
+  command = "npm run build"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 ```
 
 ## 🚀 Deployment Steps
