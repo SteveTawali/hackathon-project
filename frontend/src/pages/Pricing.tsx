@@ -151,13 +151,13 @@ const Pricing = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <main className="container mx-auto p-6 space-y-12">
+      <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-8 sm:space-y-12">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold">
+          <h1 className="text-3xl sm:text-4xl font-bold">
             {isAuthenticated ? "Your Current Plan" : "Choose Your Plan"}
           </h1>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-lg sm:text-xl text-muted-foreground">
             {isAuthenticated 
               ? "Review your current plan and explore premium features"
               : "Start your mental wellness journey with our flexible pricing options"
@@ -166,7 +166,7 @@ const Pricing = () => {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
           {/* Free Tier */}
           <Card className="relative">
             <CardHeader className="text-center">

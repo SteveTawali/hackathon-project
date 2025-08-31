@@ -43,11 +43,11 @@ const Dashboard = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <main className="container mx-auto p-6 space-y-8">
+      <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
         {/* Welcome Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold gradient-text">Welcome to Your Wellness Dashboard</h1>
-          <p className="text-xl text-muted-foreground">Track your mental health journey with intention and care</p>
+          <h1 className="text-3xl sm:text-4xl font-bold gradient-text">Welcome to Your Wellness Dashboard</h1>
+          <p className="text-lg sm:text-xl text-muted-foreground">Track your mental health journey with intention and care</p>
         </div>
 
         {/* Daily Affirmation */}
@@ -72,28 +72,28 @@ const Dashboard = () => {
         </Card>
 
         {/* Quick Actions */}
-        <div className="grid md:grid-cols-4 gap-4">
-          <Button asChild variant="outline" className="h-24 flex-col space-y-2">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          <Button asChild variant="outline" className="h-20 sm:h-24 flex-col space-y-1 sm:space-y-2 text-xs sm:text-sm">
             <Link to="/mood">
-              <Heart className="h-8 w-8 text-primary" />
+              <Heart className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
               <span>Log Mood</span>
             </Link>
           </Button>
-          <Button asChild variant="outline" className="h-24 flex-col space-y-2">
+          <Button asChild variant="outline" className="h-20 sm:h-24 flex-col space-y-1 sm:space-y-2 text-xs sm:text-sm">
             <Link to="/journal">
-              <BookOpen className="h-8 w-8 text-secondary" />
+              <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-secondary" />
               <span>Write Journal</span>
             </Link>
           </Button>
-          <Button asChild variant="outline" className="h-24 flex-col space-y-2">
+          <Button asChild variant="outline" className="h-20 sm:h-24 flex-col space-y-1 sm:space-y-2 text-xs sm:text-sm">
             <Link to="/meditation">
-              <Target className="h-8 w-8 text-meditation" />
+              <Target className="h-6 w-6 sm:h-8 sm:w-8 text-meditation" />
               <span>Meditate</span>
             </Link>
           </Button>
-          <Button asChild variant="outline" className="h-24 flex-col space-y-2">
+          <Button asChild variant="outline" className="h-20 sm:h-24 flex-col space-y-1 sm:space-y-2 text-xs sm:text-sm">
             <Link to="/habits">
-              <TrendingUp className="h-8 w-8 text-tertiary" />
+              <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8 text-tertiary" />
               <span>Track Habits</span>
             </Link>
           </Button>
@@ -130,7 +130,7 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           {/* Mood Overview */}
           <Card className="wellness-card">
             <CardHeader>

@@ -169,14 +169,14 @@ const Journal = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <main className="container mx-auto p-6 space-y-8">
+      <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold gradient-text">Journal</h1>
-          <p className="text-xl text-muted-foreground">Reflect, process, and grow through writing</p>
+          <h1 className="text-3xl sm:text-4xl font-bold gradient-text">Journal</h1>
+          <p className="text-lg sm:text-xl text-muted-foreground">Reflect, process, and grow through writing</p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           {/* Journal Entry Form */}
           <Card className="wellness-card">
             <CardHeader>

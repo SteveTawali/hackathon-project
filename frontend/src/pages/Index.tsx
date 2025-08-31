@@ -139,21 +139,21 @@ const Index = () => {
               {isAuthenticated ? "Continue Your Wellness Journey" : "Your Mental Health Journey Starts Here"}
             </Badge>
             
-            <h1 className="text-5xl md:text-7xl font-bold leading-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold leading-tight">
               <span className="gradient-text">MindWell</span>
               <br />
               <span className="text-foreground">Mental Wellness</span>
               <br />
-              <span className="text-muted-foreground text-3xl md:text-5xl">Made Simple</span>
+              <span className="text-muted-foreground text-2xl sm:text-3xl md:text-5xl">Made Simple</span>
             </h1>
             
             {isAuthenticated ? (
-              <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
                 Welcome back, {userName?.split('@')[0]}! Continue your mental wellness journey 
                 with mood tracking, journaling, habit building, and mindfulness practices.
               </p>
             ) : (
-              <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
                 Track your mood, build healthy habits, practice mindfulness, and access support 
                 whenever you need it. Your comprehensive mental wellness companion.
               </p>
@@ -334,7 +334,7 @@ const Index = () => {
                   Join thousands of people who are taking control of their mental health with MindWell. 
                   Your journey to better mental wellness starts with a single step.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                   <Button asChild size="lg" className="text-lg px-8 py-6">
                     <Link to="/register">
                       Get Started Free
