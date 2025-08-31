@@ -116,7 +116,9 @@ const Pricing = () => {
     document.body.appendChild(script);
   };
 
-  const handleRegionalPayment = () => {
+
+
+  const handleAnnualPayment = () => {
     if (!config.payment.paystackPublicKey) {
       toast({
         title: "Configuration Error",
@@ -128,18 +130,18 @@ const Pricing = () => {
 
     setIsProcessingPayment(true);
     
-    // Regional pricing configuration (199 cents = $1.99)
-    const regionalConfig = {
+    // Annual pricing configuration (2499 cents = $24.99)
+    const annualConfig = {
       ...paystackConfig,
-      amount: 19900, // $1.99 in cents
-      ref: new Date().getTime().toString() + '_regional',
+      amount: 249900, // $24.99 in cents
+      ref: new Date().getTime().toString() + '_annual',
     };
 
     const script = document.createElement('script');
     script.src = 'https://js.paystack.co/v1/inline.js';
     script.onload = () => {
       // @ts-ignore
-      const handler = PaystackPop.setup(regionalConfig);
+      const handler = PaystackPop.setup(annualConfig);
       handler.openIframe();
     };
     document.body.appendChild(script);
@@ -226,11 +228,6 @@ const Pricing = () => {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="bg-primary/10 p-3 rounded-lg">
-                <p className="text-sm font-medium text-primary">
-                  💡 Annual Plan: $24.99/year (30% discount)
-                </p>
-              </div>
               <ul className="space-y-3">
                 {premiumFeatures.map((feature, index) => (
                   <li key={index} className="flex items-center gap-3">
@@ -268,50 +265,50 @@ const Pricing = () => {
             </CardContent>
           </Card>
 
-          {/* Regional Pricing Tier */}
-          <Card className="relative border-green-500">
+          {/* Annual Plan Tier */}
+          <Card className="relative border-blue-500">
             <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-              <Badge className="bg-green-500 text-white px-3 py-1">
-                🌍 Regional
+              <Badge className="bg-blue-500 text-white px-3 py-1">
+                💰 Best Value
               </Badge>
             </div>
             <CardHeader className="text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
-                <Users className="h-6 w-6 text-green-500" />
-                <CardTitle className="text-2xl">Regional</CardTitle>
+                <Star className="h-6 w-6 text-blue-500" />
+                <CardTitle className="text-2xl">Annual</CardTitle>
               </div>
               <CardDescription>
-                Affordable pricing for African markets
+                Save 30% with annual billing
               </CardDescription>
-              <div className="text-4xl font-bold mt-4">$1.99</div>
-              <p className="text-muted-foreground">per month</p>
-              <div className="text-sm text-green-600 font-medium">
-                60% off standard price
+              <div className="text-4xl font-bold mt-4">$24.99</div>
+              <p className="text-muted-foreground">per year</p>
+              <div className="text-sm text-blue-600 font-medium">
+                30% discount • $2.08/month
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="bg-green-50 p-3 rounded-lg border border-green-200">
-                <p className="text-sm font-medium text-green-700">
-                  🌍 Available in African markets
+              <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                <p className="text-sm font-medium text-blue-700">
+                  💰 Save $10.89 per year
                 </p>
-                <p className="text-xs text-green-600 mt-1">
-                  Same premium features at a more accessible price
+                <p className="text-xs text-blue-600 mt-1">
+                  Same premium features, better value
                 </p>
               </div>
               <ul className="space-y-3">
                 {premiumFeatures.map((feature, index) => (
                   <li key={index} className="flex items-center gap-3">
-                    <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
+                    <Check className="h-4 w-4 text-blue-500 flex-shrink-0" />
                     <span className="text-foreground">{feature.text}</span>
                   </li>
                 ))}
               </ul>
-              <Button className="w-full bg-green-600 hover:bg-green-700" asChild>
+              <Button className="w-full bg-blue-600 hover:bg-blue-700" asChild>
                 {isAuthenticated ? (
                   userPlan === 'premium' ? (
                     <Link to="/dashboard">Manage Premium</Link>
                   ) : (
-                    <Button onClick={handleRegionalPayment} disabled={isProcessingPayment} className="bg-green-600 hover:bg-green-700">
+                    <Button onClick={handleAnnualPayment} disabled={isProcessingPayment} className="bg-blue-600 hover:bg-blue-700">
                       {isProcessingPayment ? (
                         <>
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
@@ -319,14 +316,14 @@ const Pricing = () => {
                         </>
                       ) : (
                         <>
-                          <Users className="h-4 w-4 mr-2" />
-                          Choose Regional Plan
+                          <Star className="h-4 w-4 mr-2" />
+                          Choose Annual Plan
                         </>
                       )}
                     </Button>
                   )
                 ) : (
-                  <Link to="/register">Start Regional Trial</Link>
+                  <Link to="/register">Start Annual Trial</Link>
                 )}
               </Button>
               <p className="text-xs text-center text-muted-foreground">
