@@ -4,34 +4,114 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LogIn, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { LogIn, Mail, Lock, Eye, EyeOff, AlertCircle } from "lucide-react";
 import Navigation from "@/components/Navigation";
+import { useToast } from "@/hooks/use-toast";
+import { API_BASE_URL } from "@/config";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [emailVerificationRequired, setEmailVerificationRequired] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState("");
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    if (!email || !password) {
+      setError("Please fill in all fields.");
+      return;
+    }
     
-    // Simulate API call
-    setTimeout(() => {
-      // For demo purposes, accept any email/password
-      localStorage.setItem('authToken', 'demo-token');
-      localStorage.setItem('userEmail', email);
+    setIsLoading(true);
+    setError("");
+    setEmailVerificationRequired(false);
+    
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: email,
+          password: password
+        }),
+      });
       
-      // Set join date if it doesn't exist (for existing users)
-      if (!localStorage.getItem('userJoinDate')) {
-        localStorage.setItem('userJoinDate', Date.now().toString());
+      const data = await response.json();
+      
+      if (response.ok) {
+        // Store authentication data
+        localStorage.setItem('authToken', data.access_token);
+        localStorage.setItem('userEmail', data.user.email);
+        localStorage.setItem('userName', data.user.username);
+        
+        // Set join date if it doesn't exist (for existing users)
+        if (!localStorage.getItem('userJoinDate')) {
+          localStorage.setItem('userJoinDate', Date.now().toString());
+        }
+        
+        toast({
+          title: "Login Successful!",
+          description: "Welcome back to MindWell!",
+        });
+        
+        navigate('/dashboard');
+      } else {
+        if (data.email_verification_required) {
+          setEmailVerificationRequired(true);
+          setPendingEmail(data.email);
+          setError("Please verify your email address before logging in.");
+        } else {
+          setError(data.error || 'Login failed. Please check your credentials.');
+        }
       }
-      
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Network error. Please check your connection and try again.');
+    } finally {
       setIsLoading(false);
-      navigate('/dashboard');
-    }, 1000);
+    }
+  };
+
+  const handleResendVerification = async () => {
+    if (!pendingEmail) return;
+    
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/resend-verification`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: pendingEmail }),
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        toast({
+          title: "Verification Email Sent!",
+          description: "Please check your email for the verification link.",
+        });
+      } else {
+        toast({
+          title: "Failed to Send Email",
+          description: data.error || 'Please try again later.',
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Network Error",
+        description: "Please check your connection and try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -95,6 +175,37 @@ const Login = () => {
                   </Button>
                 </div>
               </div>
+              
+              {error && (
+                <div className="text-red-500 text-sm text-center bg-red-50 p-3 rounded-md">
+                  {error}
+                </div>
+              )}
+              
+              {emailVerificationRequired && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4">
+                  <div className="flex items-start gap-3">
+                    <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium text-yellow-800">
+                        Email Verification Required
+                      </p>
+                      <p className="text-sm text-yellow-700">
+                        Please check your email and click the verification link before logging in.
+                      </p>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleResendVerification}
+                        className="text-yellow-700 border-yellow-300 hover:bg-yellow-100"
+                      >
+                        Resend Verification Email
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
               
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Signing in..." : "Sign In"}

@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UserPlus, Mail, Lock, Eye, EyeOff, User } from "lucide-react";
 import Navigation from "@/components/Navigation";
+import { useToast } from "@/hooks/use-toast";
+import { API_BASE_URL } from "@/config";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -15,28 +17,54 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    if (!name || !email || !password || !confirmPassword) {
+      setError("Please fill in all fields.");
+      return;
+    }
     if (password !== confirmPassword) {
-      alert("Passwords don't match!");
+      setError("Passwords do not match.");
       return;
     }
     
     setIsLoading(true);
+    setError("");
     
-    // Simulate API call
-    setTimeout(() => {
-      // For demo purposes, accept any registration
-      localStorage.setItem('authToken', 'demo-token');
-      localStorage.setItem('userEmail', email);
-      localStorage.setItem('userName', name);
-      localStorage.setItem('userJoinDate', Date.now().toString()); // Set join date
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: name,
+          email: email,
+          password: password
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        toast({
+          title: "Registration Successful!",
+          description: "Please check your email to verify your account before logging in.",
+        });
+        navigate('/login');
+      } else {
+        setError(data.error || 'Registration failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      setError('Network error. Please check your connection and try again.');
+    } finally {
       setIsLoading(false);
-      navigate('/dashboard');
-    }, 1000);
+    }
   };
 
   return (
@@ -145,6 +173,12 @@ const Register = () => {
                   </Button>
                 </div>
               </div>
+              
+              {error && (
+                <div className="text-red-500 text-sm text-center bg-red-50 p-3 rounded-md">
+                  {error}
+                </div>
+              )}
               
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Creating account..." : "Create Account"}
