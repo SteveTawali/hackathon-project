@@ -1,15 +1,21 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import { API_BASE_URL } from "@/config";
 
 const Register = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !password || !confirmPassword) {
       setError("Please fill in all fields.");
@@ -19,9 +25,40 @@ const Register = () => {
       setError("Passwords do not match.");
       return;
     }
+    
+    setIsLoading(true);
     setError("");
-    // Add registration logic here
-    alert("Registration successful (demo)");
+    
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: name,
+          email: email,
+          password: password
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        toast({
+          title: "Registration Successful!",
+          description: "Welcome to MindWell! Please log in to continue.",
+        });
+        navigate('/login');
+      } else {
+        setError(data.error || 'Registration failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      setError('Network error. Please check your connection and try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -86,7 +123,9 @@ const Register = () => {
               />
             </div>
             {error && <div className="text-red-500 text-sm">{error}</div>}
-            <Button type="submit" className="w-full text-lg">Register</Button>
+            <Button type="submit" className="w-full text-lg" disabled={isLoading}>
+              {isLoading ? "Registering..." : "Register"}
+            </Button>
           </form>
           <div className="mt-6 text-center">
             <span className="text-muted-foreground">Already have an account?</span>
