@@ -51,7 +51,7 @@ const Login = () => {
       } else {
         toast({
           title: "Login failed",
-          description: data.message || "Invalid email or password",
+          description: data.error || data.message || "Invalid email or password",
           variant: "destructive",
         });
       }

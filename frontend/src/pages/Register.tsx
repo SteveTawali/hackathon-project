@@ -74,7 +74,7 @@ const Register = () => {
       } else {
         toast({
           title: "Registration failed",
-          description: data.message || "Failed to create account. Please try again.",
+          description: data.error || data.message || "Failed to create account. Please try again.",
           variant: "destructive",
         });
       }
