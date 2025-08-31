@@ -13,6 +13,7 @@ import MoodTracker from "./pages/MoodTracker";
 import Journal from "./pages/Journal";
 import HabitTracker from "./pages/HabitTracker";
 import Meditation from "./pages/Meditation";
+import Pricing from "./pages/Pricing";
 import SOSSupport from "./pages/SOSSupport";
 import NotFound from "./pages/NotFound";
 
@@ -56,6 +57,7 @@ const App = () => (
                 <Meditation />
               </ProtectedRoute>
             } />
+            <Route path="/pricing" element={<Pricing />} />
             <Route path="/community" element={
               <ProtectedRoute>
                 <Community />

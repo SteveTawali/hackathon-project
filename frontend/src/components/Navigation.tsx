@@ -13,7 +13,8 @@ import {
   Menu,
   Home,
   Sparkles,
-  Users
+  Users,
+  Crown
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import DarkModeSwitch from "@/components/ui/DarkModeSwitch";
@@ -30,6 +31,7 @@ const Navigation = () => {
   { path: "/habits", label: "Habits", icon: Target },
   { path: "/meditation", label: "Meditation", icon: Timer },
   { path: "/community", label: "Community", icon: Users },
+  { path: "/pricing", label: "Pricing", icon: Crown },
   { path: "/sos", label: "SOS Support", icon: Shield, urgent: true },
   { path: "/login", label: "Login", icon: Sparkles }
   ];
