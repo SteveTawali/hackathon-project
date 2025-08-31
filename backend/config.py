@@ -6,10 +6,14 @@ class Config:
     
     # Database configuration - explicitly use Railway's DATABASE_URL
     DATABASE_URL = os.environ.get('DATABASE_URL')
+    print(f"DEBUG: DATABASE_URL from env: {DATABASE_URL}")
+    
     if DATABASE_URL:
         SQLALCHEMY_DATABASE_URI = DATABASE_URL
+        print(f"DEBUG: Using DATABASE_URL: {SQLALCHEMY_DATABASE_URI}")
     else:
         SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'
+        print(f"DEBUG: Using fallback SQLite: {SQLALCHEMY_DATABASE_URI}")
     
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'your-jwt-secret-here'
