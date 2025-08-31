@@ -12,7 +12,7 @@ import { config } from "@/config";
 const Pricing = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [processingPlan, setProcessingPlan] = useState<string | null>(null);
   
   // Check if user is authenticated
   const isAuthenticated = localStorage.getItem('authToken');
@@ -65,7 +65,7 @@ const Pricing = () => {
       // Verify payment with backend
       const verificationResult = await paymentService.verifyPayment(response.reference);
       
-      setIsProcessingPayment(false);
+      setProcessingPlan(null);
       localStorage.setItem('userPlan', 'premium');
       
       toast({
@@ -76,7 +76,7 @@ const Pricing = () => {
       // Redirect to dashboard after successful payment
       navigate('/dashboard');
     } catch (error) {
-      setIsProcessingPayment(false);
+      setProcessingPlan(null);
       console.error('Payment verification failed:', error);
       toast({
         title: "Payment Verification Failed",
@@ -87,7 +87,7 @@ const Pricing = () => {
   };
 
   const onClose = () => {
-    setIsProcessingPayment(false);
+    setProcessingPlan(null);
     toast({
       title: "Payment Cancelled",
       description: "You can try again anytime.",
@@ -104,7 +104,7 @@ const Pricing = () => {
       return;
     }
 
-    setIsProcessingPayment(true);
+    setProcessingPlan('premium');
     // Use Paystack directly without the hook to avoid configuration issues
     const script = document.createElement('script');
     script.src = 'https://js.paystack.co/v1/inline.js';
@@ -128,7 +128,7 @@ const Pricing = () => {
       return;
     }
 
-    setIsProcessingPayment(true);
+    setProcessingPlan('annual');
     
     // Annual pricing configuration (2499 cents = $24.99)
     const annualConfig = {
@@ -241,8 +241,8 @@ const Pricing = () => {
                   userPlan === 'premium' ? (
                     <Link to="/dashboard">Manage Premium</Link>
                   ) : (
-                    <Button onClick={handlePayment} disabled={isProcessingPayment}>
-                      {isProcessingPayment ? (
+                    <Button onClick={handlePayment} disabled={processingPlan === 'premium'}>
+                      {processingPlan === 'premium' ? (
                         <>
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                           Processing...
@@ -308,8 +308,8 @@ const Pricing = () => {
                   userPlan === 'premium' ? (
                     <Link to="/dashboard">Manage Premium</Link>
                   ) : (
-                    <Button onClick={handleAnnualPayment} disabled={isProcessingPayment} className="bg-blue-600 hover:bg-blue-700">
-                      {isProcessingPayment ? (
+                    <Button onClick={handleAnnualPayment} disabled={processingPlan === 'annual'} className="bg-blue-600 hover:bg-blue-700">
+                      {processingPlan === 'annual' ? (
                         <>
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                           Processing...
