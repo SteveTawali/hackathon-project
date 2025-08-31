@@ -114,6 +114,16 @@ type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>
 
 type ToastActionElement = React.ReactElement<typeof ToastAction>
 
+const Toaster = React.forwardRef<
+  React.ElementRef<typeof ToastViewport>,
+  React.ComponentPropsWithoutRef<typeof ToastViewport>
+>(({ ...props }, ref) => (
+  <ToastProvider>
+    <ToastViewport ref={ref} {...props} />
+  </ToastProvider>
+))
+Toaster.displayName = "Toaster"
+
 export {
   type ToastProps,
   type ToastActionElement,
@@ -124,4 +134,5 @@ export {
   ToastDescription,
   ToastClose,
   ToastAction,
+  Toaster,
 }
