@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Heart, BookOpen, Target, Sparkles, TrendingUp } from "lucide-react";
+import { Calendar, Heart, BookOpen, Target, Sparkles, TrendingUp, Phone, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 
@@ -98,6 +98,37 @@ const Dashboard = () => {
             </Link>
           </Button>
         </div>
+
+        {/* Emergency Support */}
+        <Card className="border-emergency bg-emergency/5">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Shield className="h-6 w-6 text-emergency" />
+                <div>
+                  <h3 className="font-semibold text-emergency">Need Immediate Support?</h3>
+                  <p className="text-sm text-muted-foreground">24/7 crisis support available</p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => window.open('tel:+254722178177', '_self')}
+                >
+                  <Phone className="h-4 w-4 mr-2" />
+                  Call Now
+                </Button>
+                <Button asChild size="sm">
+                  <Link to="/sos">
+                    <Shield className="h-4 w-4 mr-2" />
+                    Get Help
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Mood Overview */}
