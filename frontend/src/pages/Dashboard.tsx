@@ -102,7 +102,7 @@ const Dashboard = () => {
         {/* Emergency Support */}
         <Card className="border-emergency bg-emergency/5">
           <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <Shield className="h-6 w-6 text-emergency" />
                 <div>
@@ -110,16 +110,17 @@ const Dashboard = () => {
                   <p className="text-sm text-muted-foreground">24/7 crisis support available</p>
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                 <Button 
                   variant="outline" 
                   size="sm"
                   onClick={() => window.open('tel:+254722178177', '_self')}
+                  className="w-full sm:w-auto"
                 >
                   <Phone className="h-4 w-4 mr-2" />
                   Call Now
                 </Button>
-                <Button asChild size="sm">
+                <Button asChild size="sm" className="w-full sm:w-auto">
                   <Link to="/sos">
                     <Shield className="h-4 w-4 mr-2" />
                     Get Help

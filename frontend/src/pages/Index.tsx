@@ -90,30 +90,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-gradient-primary">
-                <Sparkles className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold gradient-text">MindWell</h1>
-                <p className="text-xs text-muted-foreground">Mental Wellness Platform</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <Button asChild variant="ghost">
-                <Link to="/dashboard">Dashboard</Link>
-              </Button>
-              <Button asChild>
-                <Link to="/dashboard">Get Started</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navigation />
 
       {/* Welcome Banner for Logged-in Users */}
       {isAuthenticated && (

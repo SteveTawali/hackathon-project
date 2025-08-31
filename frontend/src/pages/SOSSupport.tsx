@@ -157,11 +157,11 @@ const SOSSupport = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <main className="container mx-auto p-6 space-y-8">
+      <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-emergency">Crisis Support & Resources</h1>
-          <p className="text-xl text-muted-foreground">You're not alone. Help is available 24/7 in Kenya.</p>
+          <h1 className="text-3xl sm:text-4xl font-bold text-emergency">Crisis Support & Resources</h1>
+          <p className="text-lg sm:text-xl text-muted-foreground">You're not alone. Help is available 24/7 in Kenya.</p>
         </div>
 
         {/* Emergency Alert */}
@@ -174,29 +174,31 @@ const SOSSupport = () => {
                 <p className="text-sm text-muted-foreground">If you're having thoughts of suicide or self-harm, reach out now.</p>
               </div>
             </div>
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <Button 
-                className="bg-emergency hover:bg-emergency/90" 
+                className="bg-emergency hover:bg-emergency/90 w-full" 
                 size="lg"
                 onClick={handleEmergencyCall}
               >
                 <Phone className="h-4 w-4 mr-2" />
-                Call Befrienders Kenya: +254 722 178 177
+                <span className="hidden sm:inline">Call Befrienders Kenya: +254 722 178 177</span>
+                <span className="sm:hidden">Call Now</span>
               </Button>
               <Button 
                 variant="outline" 
-                className="border-emergency text-emergency" 
+                className="border-emergency text-emergency w-full" 
                 size="lg"
                 onClick={handleTextSupport}
               >
                 <MessageCircle className="h-4 w-4 mr-2" />
-                Text HOME to 741741
+                <span className="hidden sm:inline">Text HOME to 741741</span>
+                <span className="sm:hidden">Text Support</span>
               </Button>
             </div>
           </CardContent>
         </Card>
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           {/* Emergency Contacts */}
           <Card>
             <CardHeader>

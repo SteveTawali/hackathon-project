@@ -286,7 +286,7 @@ const Journal = () => {
         {/* Journal Entries */}
         <Card className="wellness-card">
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
                 <CardTitle className="flex items-center gap-2">
                   <Calendar className="h-5 w-5 text-green-500" />
@@ -294,8 +294,8 @@ const Journal = () => {
                 </CardTitle>
                 <CardDescription>Review your past reflections and insights</CardDescription>
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={handleExportData}>
+              <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                <Button variant="outline" size="sm" onClick={handleExportData} className="w-full sm:w-auto">
                   <Download className="h-4 w-4 mr-2" />
                   Export
                 </Button>
