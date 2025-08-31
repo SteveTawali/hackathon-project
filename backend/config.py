@@ -9,7 +9,11 @@ class Config:
     print(f"DEBUG: DATABASE_URL from env: {DATABASE_URL}")
     
     if DATABASE_URL:
-        SQLALCHEMY_DATABASE_URI = DATABASE_URL
+        # Force SQLAlchemy to use PyMySQL instead of MySQLdb
+        if DATABASE_URL.startswith('mysql://'):
+            SQLALCHEMY_DATABASE_URI = DATABASE_URL.replace('mysql://', 'mysql+pymysql://', 1)
+        else:
+            SQLALCHEMY_DATABASE_URI = DATABASE_URL
         print(f"DEBUG: Using DATABASE_URL: {SQLALCHEMY_DATABASE_URI}")
     else:
         SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'
