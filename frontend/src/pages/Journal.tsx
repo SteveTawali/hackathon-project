@@ -4,22 +4,33 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Sparkles, Search, Calendar, Heart } from "lucide-react";
+import { BookOpen, Sparkles, Search, Calendar, Heart, Crown, Lock, Download, BarChart3 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Navigation from "@/components/Navigation";
+import PremiumGuard from "@/components/PremiumGuard";
 
 const Journal = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [promptsUsed, setPromptsUsed] = useState(0);
   const { toast } = useToast();
+
+  // Check if user is premium
+  const isPremium = localStorage.getItem('userPlan') === 'premium';
+  const freePromptLimit = 3; // Free users get 3 prompts per day
 
   const journalPrompts = [
     "What are three things you're grateful for today?",
     "Describe a moment when you felt genuinely happy recently.",
     "What challenge are you currently facing, and how are you handling it?",
     "Write about someone who has positively impacted your life.",
-    "What self-care activity would benefit you most right now?"
+    "What self-care activity would benefit you most right now?",
+    "Reflect on a recent accomplishment and how it made you feel.",
+    "What would you tell your younger self about mental health?",
+    "Describe a time when you overcame a difficult situation.",
+    "What does self-compassion mean to you?",
+    "How do you practice mindfulness in your daily life?"
   ];
 
   const entries = [
@@ -70,9 +81,44 @@ const Journal = () => {
   };
 
   const getRandomPrompt = () => {
+    // Check if user can use more prompts
+    if (!isPremium && promptsUsed >= freePromptLimit) {
+      toast({
+        title: "Prompt limit reached",
+        description: "Free users get 3 prompts per day. Upgrade to Premium for unlimited prompts!",
+        variant: "destructive"
+      });
+      return;
+    }
+
     const prompt = journalPrompts[Math.floor(Math.random() * journalPrompts.length)];
     setTitle("Prompted Reflection");
     setContent(`Prompt: ${prompt}\n\n`);
+    
+    // Increment prompt usage for free users
+    if (!isPremium) {
+      setPromptsUsed(prev => prev + 1);
+    }
+  };
+
+  const handleUsePrompt = (prompt: string) => {
+    // Check if user can use more prompts
+    if (!isPremium && promptsUsed >= freePromptLimit) {
+      toast({
+        title: "Prompt limit reached",
+        description: "Free users get 3 prompts per day. Upgrade to Premium for unlimited prompts!",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setTitle("Prompted Reflection");
+    setContent(`Prompt: ${prompt}\n\n`);
+    
+    // Increment prompt usage for free users
+    if (!isPremium) {
+      setPromptsUsed(prev => prev + 1);
+    }
   };
 
   const getSentimentColor = (sentiment: string) => {
@@ -82,6 +128,22 @@ const Journal = () => {
       case "neutral": return "bg-gray-100 text-gray-800";
       default: return "bg-gray-100 text-gray-800";
     }
+  };
+
+  const handleExportData = () => {
+    if (!isPremium) {
+      toast({
+        title: "Premium Feature",
+        description: "Export functionality is available for Premium users only.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    toast({
+      title: "Exporting data...",
+      description: "Your journal entries are being prepared for download.",
+    });
   };
 
   return (
@@ -151,25 +213,53 @@ const Journal = () => {
           {/* Writing Prompts */}
           <Card className="wellness-card">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-purple-500" />
-                Writing Prompts
-              </CardTitle>
-              <CardDescription>Inspiration for your journal entries</CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Sparkles className="h-5 w-5 text-purple-500" />
+                    Writing Prompts
+                  </CardTitle>
+                  <CardDescription>Inspiration for your journal entries</CardDescription>
+                </div>
+                {!isPremium && (
+                  <Badge variant="secondary" className="text-xs">
+                    {promptsUsed}/{freePromptLimit} used
+                  </Badge>
+                )}
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              {journalPrompts.map((prompt, index) => (
-                <div 
-                  key={index} 
-                  className="p-4 rounded-lg bg-muted/50 hover:bg-muted/70 transition-colors cursor-pointer"
-                  onClick={() => {
-                    setTitle("Prompted Reflection");
-                    setContent(`Prompt: ${prompt}\n\n`);
-                  }}
-                >
-                  <p className="text-sm">{prompt}</p>
+              <div className="grid gap-2">
+                {journalPrompts.slice(0, isPremium ? journalPrompts.length : 5).map((prompt, index) => (
+                  <div 
+                    key={index} 
+                    className={`p-4 rounded-lg bg-muted/50 hover:bg-muted/70 transition-colors cursor-pointer ${
+                      !isPremium && promptsUsed >= freePromptLimit ? 'opacity-50' : ''
+                    }`}
+                    onClick={() => handleUsePrompt(prompt)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm">{prompt}</p>
+                      {!isPremium && index >= 3 && (
+                        <Crown className="h-4 w-4 text-yellow-500" />
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {!isPremium && (
+                <div className="text-center pt-2">
+                  <p className="text-xs text-muted-foreground mb-2">
+                    Free users get 3 prompts per day. Upgrade for unlimited access to all prompts.
+                  </p>
+                  <Button size="sm" variant="outline" asChild>
+                    <a href="/pricing">
+                      <Crown className="h-4 w-4 mr-2" />
+                      Upgrade to Premium
+                    </a>
+                  </Button>
                 </div>
-              ))}
+              )}
             </CardContent>
           </Card>
         </div>
@@ -177,11 +267,27 @@ const Journal = () => {
         {/* Journal Entries */}
         <Card className="wellness-card">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-green-500" />
-              Your Journal Entries
-            </CardTitle>
-            <CardDescription>Review your past reflections and insights</CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-green-500" />
+                  Your Journal Entries
+                </CardTitle>
+                <CardDescription>Review your past reflections and insights</CardDescription>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={handleExportData}>
+                  <Download className="h-4 w-4 mr-2" />
+                  Export
+                </Button>
+                {!isPremium && (
+                  <Badge variant="secondary" className="text-xs">
+                    <Lock className="h-3 w-3 mr-1" />
+                    Premium
+                  </Badge>
+                )}
+              </div>
+            </div>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Search */}
@@ -218,6 +324,42 @@ const Journal = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Advanced Analytics - Premium Feature */}
+        <PremiumGuard feature="Advanced Journal Analytics" description="Get deep insights into your writing patterns and emotional trends">
+          <Card className="wellness-card">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5 text-blue-500" />
+                Writing Analytics
+              </CardTitle>
+              <CardDescription>Advanced insights into your journaling patterns</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="text-center p-4 border rounded-lg">
+                  <div className="text-2xl font-bold text-primary mb-2">12</div>
+                  <div className="text-sm text-muted-foreground">Entries This Month</div>
+                </div>
+                <div className="text-center p-4 border rounded-lg">
+                  <div className="text-2xl font-bold text-green-500 mb-2">85%</div>
+                  <div className="text-sm text-muted-foreground">Positive Sentiment</div>
+                </div>
+                <div className="text-center p-4 border rounded-lg">
+                  <div className="text-2xl font-bold text-purple-500 mb-2">245</div>
+                  <div className="text-sm text-muted-foreground">Avg Words/Entry</div>
+                </div>
+              </div>
+              <div className="mt-6 p-4 bg-muted/50 rounded-lg">
+                <h4 className="font-medium mb-2">AI Insights</h4>
+                <p className="text-sm text-muted-foreground">
+                  Your writing shows a strong focus on gratitude and personal growth. 
+                  Consider exploring deeper emotional themes in your next entries.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </PremiumGuard>
       </main>
     </div>
   );

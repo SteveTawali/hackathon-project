@@ -4,15 +4,9 @@ from dotenv import load_dotenv
 # Load environment variables BEFORE importing app modules
 load_dotenv()
 
-from app import create_app, db
-from app.models import User, Mood, Journal, Habit, HabitLog
+from app import create_app
 
 app = create_app()
-
-# Create tables when the app starts
-with app.app_context():
-    db.create_all()
-    print("Database tables created successfully!")
 
 if __name__ == '__main__':
     print("Starting CalmFlow MindSpace Backend...")

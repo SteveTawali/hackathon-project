@@ -10,39 +10,33 @@ const SOSSupport = () => {
 
   const emergencyContacts = [
     {
-      name: "Kenya Emergency Services",
-      number: "999 / 112",
-      description: "National emergency hotline",
-      type: "emergency"
-    },
-    {
-      name: "Kenya Red Cross Society",
-      number: "1199",
-      description: "Emergency response and crisis support",
-      type: "emergency"
-    },
-    {
       name: "Befrienders Kenya",
       number: "+254 722 178 177",
-      description: "24/7 emotional support and suicide prevention",
+      description: "24/7 suicide prevention & emotional support",
+      type: "emergency"
+    },
+    {
+      name: "Nairobi Women's Hospital",
+      number: "+254 20 272 6000",
+      description: "Mental health crisis support",
+      type: "emergency"
+    },
+    {
+      name: "Kenya Red Cross",
+      number: "+254 20 395 0000",
+      description: "Emergency support & crisis intervention",
       type: "support"
     },
     {
       name: "Mental Health Kenya",
-      number: "+254 722 518 497",
-      description: "Mental health support and counseling",
+      number: "+254 700 000 000",
+      description: "Mental health information & referrals",
       type: "support"
     },
     {
-      name: "Kenya Association of Professional Counsellors",
-      number: "+254 20 3877195",
-      description: "Professional counseling referrals",
-      type: "support"
-    },
-    {
-      name: "Samaritans of Kenya",
-      number: "+254 722 277 277",
-      description: "Confidential emotional support",
+      name: "Crisis Text Line Kenya",
+      number: "Text HOME to 741741",
+      description: "Text-based crisis support",
       type: "text"
     }
   ];
@@ -51,37 +45,36 @@ const SOSSupport = () => {
     {
       id: "5-4-3-2-1",
       title: "5-4-3-2-1 Grounding",
-      description: "Use your senses to ground yourself",
+      description: "Use your senses to stay present",
       steps: [
-        "5 things you can see",
-        "4 things you can touch",
-        "3 things you can hear",
-        "2 things you can smell",
-        "1 thing you can taste"
+        "Name 5 things you can see",
+        "Name 4 things you can touch",
+        "Name 3 things you can hear",
+        "Name 2 things you can smell",
+        "Name 1 thing you can taste"
       ]
     },
     {
-      id: "box-breathing",
-      title: "Box Breathing",
+      id: "breathing",
+      title: "4-7-8 Breathing",
       description: "Calm your nervous system",
       steps: [
         "Breathe in for 4 counts",
-        "Hold for 4 counts",
-        "Breathe out for 4 counts",
-        "Hold for 4 counts",
-        "Repeat 4-8 times"
+        "Hold for 7 counts",
+        "Breathe out for 8 counts",
+        "Repeat 4 times"
       ]
     },
     {
-      id: "progressive-muscle",
+      id: "progressive",
       title: "Progressive Muscle Relaxation",
       description: "Release physical tension",
       steps: [
-        "Tense your toes for 5 seconds, then relax",
-        "Tense your calves for 5 seconds, then relax",
-        "Tense your thighs for 5 seconds, then relax",
-        "Continue up your body to your head",
-        "Notice the contrast between tension and relaxation"
+        "Tense your toes for 5 seconds",
+        "Release and feel the relaxation",
+        "Move up to your calves",
+        "Continue through your body",
+        "End with your face and head"
       ]
     }
   ];
@@ -124,11 +117,40 @@ const SOSSupport = () => {
 
   const getContactTypeIcon = (type: string) => {
     switch (type) {
-      case "emergency": return <AlertTriangle className="h-4 w-4 text-red-500" />;
-      case "text": return <MessageCircle className="h-4 w-4 text-blue-500" />;
-      case "support": return <Users className="h-4 w-4 text-green-500" />;
-      default: return <Phone className="h-4 w-4" />;
+      case 'emergency':
+        return <Phone className="h-4 w-4" />;
+      case 'text':
+        return <MessageCircle className="h-4 w-4" />;
+      case 'support':
+        return <Users className="h-4 w-4" />;
+      default:
+        return <Phone className="h-4 w-4" />;
     }
+  };
+
+  const handleCall = (number: string, name: string) => {
+    // Remove any non-numeric characters except + for phone numbers
+    const cleanNumber = number.replace(/[^\d+]/g, '');
+    
+    if (number.includes('Text')) {
+      // For text-based support, show instructions
+      alert(`To use ${name}:\n\n${number}\n\nThis will connect you to a crisis counselor via text message.`);
+    } else {
+      // For phone calls, use tel: protocol
+      window.open(`tel:${cleanNumber}`, '_self');
+    }
+  };
+
+  const handleEmergencyCall = () => {
+    const number = "+254 722 178 177";
+    const name = "Befrienders Kenya";
+    handleCall(number, name);
+  };
+
+  const handleTextSupport = () => {
+    const number = "Text HOME to 741741";
+    const name = "Crisis Text Line Kenya";
+    handleCall(number, name);
   };
 
   return (
@@ -139,7 +161,7 @@ const SOSSupport = () => {
         {/* Header */}
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold text-emergency">Crisis Support & Resources</h1>
-          <p className="text-xl text-muted-foreground">You're not alone. Help is available 24/7.</p>
+          <p className="text-xl text-muted-foreground">You're not alone. Help is available 24/7 in Kenya.</p>
         </div>
 
         {/* Emergency Alert */}
@@ -153,13 +175,22 @@ const SOSSupport = () => {
               </div>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              <Button className="bg-emergency hover:bg-emergency/90" size="lg">
+              <Button 
+                className="bg-emergency hover:bg-emergency/90" 
+                size="lg"
+                onClick={handleEmergencyCall}
+              >
                 <Phone className="h-4 w-4 mr-2" />
-                Call 999 or 112 - Emergency Services
+                Call Befrienders Kenya: +254 722 178 177
               </Button>
-              <Button variant="outline" className="border-emergency text-emergency" size="lg">
+              <Button 
+                variant="outline" 
+                className="border-emergency text-emergency" 
+                size="lg"
+                onClick={handleTextSupport}
+              >
                 <MessageCircle className="h-4 w-4 mr-2" />
-                Call +254 722 178 177 - Befrienders Kenya
+                Text HOME to 741741
               </Button>
             </div>
           </CardContent>
@@ -167,26 +198,32 @@ const SOSSupport = () => {
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Emergency Contacts */}
-          <Card className="wellness-card">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Phone className="h-5 w-5 text-red-500" />
+                <Phone className="h-5 w-5" />
                 Emergency Contacts
               </CardTitle>
-              <CardDescription>Professional crisis support available 24/7</CardDescription>
+              <CardDescription>
+                Professional help available 24/7 in Kenya
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {emergencyContacts.map((contact, index) => (
-                <div key={index} className="p-4 rounded-lg border bg-card">
-                  <div className="flex items-start justify-between mb-2">
-                    <h4 className="font-medium">{contact.name}</h4>
+                <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center gap-3">
                     {getContactTypeIcon(contact.type)}
+                    <div>
+                      <p className="font-medium">{contact.name}</p>
+                      <p className="text-sm text-muted-foreground">{contact.description}</p>
+                    </div>
                   </div>
-                  <p className="text-lg font-mono text-primary mb-1">{contact.number}</p>
-                  <p className="text-sm text-muted-foreground">{contact.description}</p>
-                  <Button variant="outline" size="sm" className="mt-2 w-full">
-                    <ExternalLink className="h-3 w-3 mr-2" />
-                    Contact Now
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleCall(contact.number, contact.name)}
+                  >
+                    {contact.type === 'text' ? 'Text' : 'Call'}
                   </Button>
                 </div>
               ))}
@@ -194,40 +231,39 @@ const SOSSupport = () => {
           </Card>
 
           {/* Grounding Exercises */}
-          <Card className="wellness-card">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5 text-blue-500" />
+                <Heart className="h-5 w-5" />
                 Grounding Exercises
               </CardTitle>
-              <CardDescription>Techniques to help you feel more centered</CardDescription>
+              <CardDescription>
+                Techniques to help you stay present and calm
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {groundingExercises.map((exercise) => (
-                <div key={exercise.id} className="space-y-2">
-                  <Button
-                    variant={activeExercise === exercise.id ? "default" : "outline"}
-                    onClick={() => setActiveExercise(activeExercise === exercise.id ? null : exercise.id)}
-                    className="w-full justify-between"
-                  >
-                    <div className="text-left">
-                      <div className="font-medium">{exercise.title}</div>
-                      <div className="text-xs text-muted-foreground">{exercise.description}</div>
-                    </div>
-                  </Button>
-                  
+                <div key={exercise.id} className="border rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-medium">{exercise.title}</h4>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setActiveExercise(activeExercise === exercise.id ? null : exercise.id)}
+                    >
+                      {activeExercise === exercise.id ? 'Hide' : 'Show Steps'}
+                    </Button>
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-2">{exercise.description}</p>
                   {activeExercise === exercise.id && (
-                    <div className="p-4 rounded-lg bg-muted/50 space-y-2">
-                      <h5 className="font-medium">Follow these steps:</h5>
-                      <ol className="space-y-1 text-sm">
-                        {exercise.steps.map((step, stepIndex) => (
-                          <li key={stepIndex} className="flex items-start gap-2">
-                            <span className="text-primary font-medium">{stepIndex + 1}.</span>
-                            <span>{step}</span>
-                          </li>
-                        ))}
-                      </ol>
-                    </div>
+                    <ol className="text-sm space-y-1 mt-3">
+                      {exercise.steps.map((step, index) => (
+                        <li key={index} className="flex items-start gap-2">
+                          <span className="text-primary font-medium">{index + 1}.</span>
+                          <span>{step}</span>
+                        </li>
+                      ))}
+                    </ol>
                   )}
                 </div>
               ))}
@@ -287,34 +323,6 @@ const SOSSupport = () => {
             <p className="text-sm text-muted-foreground">
               Crisis moments are temporary. With support, you can get through this.
             </p>
-          </CardContent>
-        </Card>
-
-        {/* Contact Us Section */}
-        <Card className="wellness-card mt-12">
-          <CardHeader>
-            <CardTitle className="text-xl font-bold text-center">Contact Us</CardTitle>
-            <CardDescription className="text-center">Reach out for further support or questions</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form className="space-y-4 max-w-lg mx-auto">
-              <div>
-                <label htmlFor="name" className="block mb-1 font-medium">Name</label>
-                <input id="name" type="text" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Your Name" />
-              </div>
-              <div>
-                <label htmlFor="email" className="block mb-1 font-medium">Email</label>
-                <input id="email" type="email" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Your Email" />
-              </div>
-              <div>
-                <label htmlFor="message" className="block mb-1 font-medium">Message</label>
-                <textarea id="message" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" rows={4} placeholder="How can we help?" />
-              </div>
-              <Button type="submit" className="w-full">Send Message</Button>
-            </form>
-            <div className="mt-6 text-center text-muted-foreground text-sm">
-              <p>We're here to help and support you through your mental wellness journey.</p>
-            </div>
           </CardContent>
         </Card>
       </main>

@@ -8,18 +8,30 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    subscription_status = db.Column(db.String(20), default='free')  # free, premium, cancelled
+    subscription_expires_at = db.Column(db.DateTime, nullable=True)
     
     # Relationships
     moods = db.relationship('Mood', backref='user', lazy=True)
     journals = db.relationship('Journal', backref='user', lazy=True)
     habits = db.relationship('Habit', backref='user', lazy=True)
     habit_logs = db.relationship('HabitLog', backref='user', lazy=True)
+    payments = db.relationship('Payment', backref='user', lazy=True)
     
     def set_password(self, password):
         self.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     
     def check_password(self, password):
         return bcrypt.checkpw(password.encode('utf-8'), self.password_hash.encode('utf-8'))
+    
+    def is_premium(self):
+        if self.subscription_status != 'premium':
+            return False
+        if self.subscription_expires_at and self.subscription_expires_at < datetime.utcnow():
+            self.subscription_status = 'expired'
+            db.session.commit()
+            return False
+        return True
 
 class Mood(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -57,10 +69,14 @@ class HabitLog(db.Model):
     completed = db.Column(db.Boolean, default=False)
     logged_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-class CommunityPost(db.Model):
+class Payment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.Text, nullable=False)
-    author = db.Column(db.String(100), nullable=False, default='Anonymous')
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    paystack_reference = db.Column(db.String(100), unique=True, nullable=False)
+    amount = db.Column(db.Integer, nullable=False)  # Amount in kobo (smallest currency unit)
+    currency = db.Column(db.String(3), default='KES')
+    status = db.Column(db.String(20), default='pending')  # pending, success, failed
+    payment_type = db.Column(db.String(20), default='subscription')  # subscription, one_time
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    # Optional: Add user_id foreign key if you want to link posts to registered users
-    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    payment_metadata = db.Column(db.JSON)  # Store additional payment data

@@ -1,149 +1,187 @@
-# MindWell - Mental Wellness Platform 🧠💙
+# MindWell - Mental Wellness Platform
 
-A comprehensive mental health and wellness application designed for Kenya, featuring mood tracking, journaling, habit building, meditation tools, and crisis support resources.
+A comprehensive mental wellness application with Flask backend and React frontend, designed to help users track mood, maintain journals with AI insights, build healthy habits, practice meditation, and access crisis support resources.
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
-📁 MindWell/
-├── 📁 backend/          # Flask REST API
-│   ├── 📁 app/          # Application modules
-│   ├── 📁 scripts/      # Development scripts
-│   ├── config.py        # Configuration
-│   ├── run.py          # Application entry point
-│   └── requirements.txt # Dependencies
-├── 📁 frontend/         # React TypeScript app
-│   ├── 📁 src/          # Source code
-│   ├── 📁 public/       # Public assets
-│   └── package.json     # Dependencies
-├── 📁 docs/            # Documentation
-└── README.md           # This file
+mindwell/
+├── frontend/                 # React/Vite frontend application
+│   ├── src/
+│   │   ├── components/      # React components
+│   │   ├── pages/          # Page components
+│   │   ├── hooks/          # Custom hooks
+│   │   └── lib/            # Utility functions
+│   ├── public/             # Static assets
+│   ├── index.html         # Main HTML file
+│   ├── vite.config.ts     # Vite configuration
+│   └── package.json       # Frontend dependencies
+├── backend/                # Flask backend API
+│   ├── app/               # Flask application
+│   │   ├── models.py      # Database models
+│   │   ├── auth.py        # Authentication routes
+│   │   ├── mood.py        # Mood tracking routes
+│   │   ├── journal.py     # Journal routes
+│   │   ├── habits.py      # Habit tracking routes
+│   │   ├── dashboard.py   # Dashboard routes
+│   │   └── ai_integration.py  # AI features
+│   ├── config.py          # App configuration
+│   ├── requirements.txt   # Python dependencies
+│   └── run.py            # Application entry point
+└── README.md             # This file
 ```
 
-## 🚀 Quick Start
+## Features
 
-### Backend (Flask API)
-```bash
-cd backend
-pip install -r requirements.txt
-python run.py
-# Server runs on http://localhost:5001
-```
+### 🎯 Core Features
+- **Mood Tracking**: Visual mood logging with trend analysis
+- **AI-Powered Journal**: Rich text entries with sentiment analysis
+- **Habit Tracking**: Comprehensive habit management with streaks
+- **Meditation & Breathing**: Interactive exercises and timers
+- **Crisis Support**: SOS resources and mental health tools
+- **Dashboard**: Beautiful overview with charts and insights
 
-### Frontend (React)
+### 🤖 AI Integration
+- Sentiment analysis for journal entries
+- Personalized daily affirmations
+- Mood-based journal prompts
+- Wellness insights and recommendations
+
+### 🔒 Security Features
+- JWT authentication with refresh tokens
+- Password strength validation
+- Input sanitization and validation
+- CORS configuration
+- Rate limiting
+
+## Quick Start
+
+### Frontend Development
+
 ```bash
 cd frontend
 npm install
 npm run dev
-# Server runs on http://localhost:5173
 ```
 
-### Development Scripts
+The frontend will be available at `http://localhost:8080`
+
+### Backend Development
+
 ```bash
-# Start both servers
-./backend/scripts/start-dev.sh
-
-# Run integration tests
-./backend/scripts/test-integration.sh
+cd backend
+pip install -r requirements.txt
+cp .env.example .env
+# Edit .env with your configuration
+python run.py
 ```
 
-## 🌟 Features
+The API will be available at `http://localhost:5000`
 
-### 🔐 **Secure Authentication**
-- JWT-based user authentication
-- Protected routes for personal data
-- Secure token management
+## Environment Configuration
 
-### 📊 **Dashboard**
-- Personalized wellness overview
-- Mood trend visualization
-- Habit progress tracking
-- Recent journal entries
+### Backend (.env)
+```env
+FLASK_APP=run.py
+FLASK_ENV=development
+DATABASE_URL=mysql+pymysql://username:password@localhost/mindwell
+SECRET_KEY=your-secret-key-here
+JWT_SECRET_KEY=your-jwt-secret-here
+OPENAI_API_KEY=your-openai-api-key-here
+```
 
-### 😊 **Mood Tracking**
-- Daily mood logging (1-5 scale)
-- Historical mood trends
-- Notes and context
+## API Endpoints
 
-### 📓 **AI-Powered Journaling**
-- Secure journal entries
-- AI sentiment analysis
-- Writing prompts and suggestions
+### Authentication
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `GET /api/auth/profile` - Get user profile
 
-### ✅ **Habit Tracker**
-- Custom habit creation
-- Progress visualization
-- Streak tracking
-- Goal setting
+### Mood Tracking
+- `POST /api/mood/log` - Log mood entry
+- `GET /api/mood/history` - Get mood history
+- `GET /api/mood/stats` - Mood statistics
 
-### 🧘 **Meditation & Mindfulness**
-- Guided breathing exercises
-- Meditation timers
-- Mindfulness resources
+### Journal
+- `POST /api/journal/entry` - Create journal entry
+- `GET /api/journal/entries` - Get journal entries
+- `GET /api/journal/entry/<id>` - Get specific entry
 
-### 💬 **Community Support**
-- Safe community posting
-- Anonymous sharing options
-- Mental health discussions
+### Habits
+- `POST /api/habits/create` - Create habit
+- `GET /api/habits/list` - Get user habits
+- `POST /api/habits/log` - Log habit progress
 
-### 🆘 **Crisis Support (Kenya-Focused)**
-- Kenya emergency services (999/112)
-- Befrienders Kenya (+254 722 178 177)
-- Mental Health Kenya resources
-- Local crisis hotlines
+### AI Features
+- `GET /api/ai/affirmation` - Generate affirmation
+- `GET /api/ai/journal-prompt` - Get journal prompt
+- `POST /api/ai/analyze-sentiment` - Analyze text sentiment
 
-## 🛡️ Security & Privacy
+## Technology Stack
 
-- **Authentication Required**: All personal features require login
-- **Data Encryption**: Secure data transmission
-- **Privacy First**: Personal data is protected and encrypted
-- **Crisis Access**: Emergency resources remain publicly accessible
+### Frontend
+- **Framework**: React 18 with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS with custom design system
+- **UI Components**: Radix UI primitives with shadcn/ui
+- **State Management**: TanStack Query
+- **Routing**: React Router v6
 
-## 🇰🇪 Localized for Kenya
+### Backend
+- **Framework**: Flask with SQLAlchemy
+- **Database**: MySQL with PyMySQL
+- **Authentication**: JWT with Flask-JWT-Extended
+- **AI Integration**: OpenAI GPT-3.5-turbo
+- **CORS**: Flask-CORS
 
-- Emergency numbers specific to Kenya
-- Local mental health organizations
-- Culturally appropriate resources
-- Professional counseling referrals
+## Development Guidelines
 
-## 🧪 Development
+### Frontend
+- Use semantic design tokens from the design system
+- Follow component composition patterns
+- Implement proper error handling and loading states
+- Ensure accessibility compliance (WCAG 2.1)
+- Mobile-first responsive design
 
-- **Backend**: Flask + SQLAlchemy + MySQL + OpenAI
-- **Frontend**: React + TypeScript + Tailwind CSS + Vite
-- **Authentication**: JWT tokens
-- **Database**: MySQL with proper relationships
-- **AI Integration**: OpenAI for sentiment analysis and affirmations
+### Backend
+- Follow RESTful API conventions
+- Implement comprehensive error handling
+- Use proper HTTP status codes
+- Validate all inputs
+- Document API endpoints
 
-## 📱 Responsive Design
+## Deployment
 
-- Mobile-first approach
-- Works on all screen sizes
-- Touch-friendly interface
-- Progressive Web App capabilities
+### Frontend
+```bash
+cd frontend
+npm run build
+# Deploy dist/ folder to your hosting service
+```
 
-## 🎯 Hackathon Ready
+### Backend
+```bash
+cd backend
+# Set production environment variables
+# Deploy to your Python hosting service (Heroku, AWS, etc.)
+```
 
-This project is designed for demonstration and includes:
-- Complete authentication flow
-- Full-stack integration
-- Professional UI/UX
-- Real-world applicability
-- Comprehensive feature set
+## Contributing
 
-## 🤝 Contributing
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
-1. Choose your focus: `backend/` or `frontend/`
-2. Follow the existing code structure
-3. Ensure all features remain behind authentication
-4. Test with both development servers
+## License
 
-## 📞 Crisis Resources
+This project is licensed under the MIT License.
 
-**In Kenya, if you need immediate help:**
-- **Emergency Services**: 999 or 112
-- **Befrienders Kenya**: +254 722 178 177
-- **Mental Health Kenya**: +254 722 518 497
+## Support
+
+For support and questions, please open an issue on GitHub or contact the development team.
 
 ---
 
-**Built with ❤️ for mental wellness in Kenya**
+Made with ❤️ for mental wellness and self-care.

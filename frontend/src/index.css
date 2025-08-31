@@ -143,6 +143,46 @@
     background: var(--gradient-hero);
   }
 
+
+
+  /* Emergency utility classes */
+  .text-emergency {
+    color: hsl(var(--emergency));
+  }
+
+  .bg-emergency {
+    background-color: hsl(var(--emergency));
+  }
+
+  .border-emergency {
+    border-color: hsl(var(--emergency));
+  }
+
+  .bg-emergency\/5 {
+    background-color: hsl(var(--emergency) / 0.05);
+  }
+
+  .bg-emergency\/10 {
+    background-color: hsl(var(--emergency) / 0.1);
+  }
+
+  .hover\:bg-emergency\/90:hover {
+    background-color: hsl(var(--emergency) / 0.9);
+  }
+
+  /* Additional utility classes */
+  .text-secondary {
+    color: hsl(var(--secondary));
+  }
+
+  .text-tertiary {
+    color: hsl(var(--tertiary));
+  }
+
+  .text-meditation {
+    color: hsl(var(--meditation));
+  }
+
   /* Meditation/Breathing Circle */
   .breathing-circle {
     @apply rounded-full transition-all duration-4000 ease-in-out;
