@@ -7,9 +7,6 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
-    email_verified = db.Column(db.Boolean, default=False)
-    email_verification_token = db.Column(db.String(255), nullable=True)
-    email_verification_expires = db.Column(db.DateTime, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     subscription_status = db.Column(db.String(20), default='free')  # free, premium, cancelled
     subscription_expires_at = db.Column(db.DateTime, nullable=True)
@@ -35,27 +32,6 @@ class User(db.Model):
             db.session.commit()
             return False
         return True
-    
-    def generate_verification_token(self):
-        import secrets
-        import uuid
-        from datetime import datetime, timedelta
-        
-        # Generate a secure token
-        token = str(uuid.uuid4()) + secrets.token_urlsafe(32)
-        self.email_verification_token = token
-        self.email_verification_expires = datetime.utcnow() + timedelta(hours=24)
-        return token
-    
-    def verify_email_token(self, token):
-        if (self.email_verification_token == token and 
-            self.email_verification_expires and 
-            self.email_verification_expires > datetime.utcnow()):
-            self.email_verified = True
-            self.email_verification_token = None
-            self.email_verification_expires = None
-            return True
-        return False
 
 class Mood(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -6,8 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UserPlus, Mail, Lock, Eye, EyeOff, User } from "lucide-react";
 import Navigation from "@/components/Navigation";
-import { useToast } from "@/hooks/use-toast";
 import { API_BASE_URL } from "@/config";
+import { useToast } from "@/hooks/use-toast";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -17,23 +17,31 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email || !password || !confirmPassword) {
-      setError("Please fill in all fields.");
+    
+    if (password !== confirmPassword) {
+      toast({
+        title: "Passwords don't match",
+        description: "Please make sure your passwords match.",
+        variant: "destructive",
+      });
       return;
     }
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+    
+    if (password.length < 6) {
+      toast({
+        title: "Password too short",
+        description: "Password must be at least 6 characters long.",
+        variant: "destructive",
+      });
       return;
     }
     
     setIsLoading(true);
-    setError("");
     
     try {
       const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
@@ -41,27 +49,42 @@ const Register = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
+        body: JSON.stringify({ 
           username: name,
-          email: email,
-          password: password
+          email, 
+          password 
         }),
       });
-      
+
       const data = await response.json();
-      
+
       if (response.ok) {
+        // Store the JWT token
+        localStorage.setItem('authToken', data.access_token);
+        localStorage.setItem('userEmail', email);
+        localStorage.setItem('userName', name);
+        localStorage.setItem('userJoinDate', Date.now().toString());
+        
         toast({
-          title: "Registration Successful!",
-          description: "Please check your email to verify your account before logging in.",
+          title: "Registration successful",
+          description: "Welcome to MindWell! Your account has been created.",
         });
-        navigate('/login');
+        
+        navigate('/dashboard');
       } else {
-        setError(data.error || 'Registration failed. Please try again.');
+        toast({
+          title: "Registration failed",
+          description: data.error || data.message || "Failed to create account. Please try again.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error('Registration error:', error);
-      setError('Network error. Please check your connection and try again.');
+      toast({
+        title: "Registration failed",
+        description: "Network error. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -128,6 +151,7 @@ const Register = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     className="pl-10 pr-10"
                     required
+                    minLength={6}
                   />
                   <Button
                     type="button"
@@ -174,30 +198,17 @@ const Register = () => {
                 </div>
               </div>
               
-              {error && (
-                <div className="text-red-500 text-sm text-center bg-red-50 p-3 rounded-md">
-                  {error}
-                </div>
-              )}
-              
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Creating account..." : "Create Account"}
               </Button>
-            </form>
-            
-            <div className="mt-6 text-center space-y-2">
-              <p className="text-sm text-muted-foreground">
-                Already have an account?{" "}
+              
+              <div className="text-center text-sm">
+                <span className="text-muted-foreground">Already have an account? </span>
                 <Link to="/login" className="text-primary hover:underline">
                   Sign in
                 </Link>
-              </p>
-              <p className="text-sm text-muted-foreground">
-                <Link to="/" className="text-primary hover:underline">
-                  Back to Home
-                </Link>
-              </p>
-            </div>
+              </div>
+            </form>
           </CardContent>
         </Card>
       </main>

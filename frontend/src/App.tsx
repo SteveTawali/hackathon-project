@@ -13,7 +13,6 @@ import SOSSupport from "./pages/SOSSupport";
 import Pricing from "./pages/Pricing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import EmailVerification from "./pages/EmailVerification";
 import Profile from "./pages/Profile";
 import HelpCenter from "./pages/HelpCenter";
 import Contact from "./pages/Contact";
@@ -32,7 +31,6 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/verify-email" element={<EmailVerification />} />
           <Route path="/dashboard" element={
             <AuthGuard>
               <Dashboard />

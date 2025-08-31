@@ -3,7 +3,22 @@ from datetime import timedelta
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'your-secret-key-here'
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'mysql+pymysql://calmflow_user:CalmFlow123!@localhost:3306/calmflow_mindspace'
+    
+    # Database configuration - explicitly use Railway's DATABASE_URL
+    DATABASE_URL = os.environ.get('DATABASE_URL')
+    print(f"DEBUG: DATABASE_URL from env: {DATABASE_URL}")
+    
+    if DATABASE_URL:
+        # Force SQLAlchemy to use PyMySQL instead of MySQLdb
+        if DATABASE_URL.startswith('mysql://'):
+            SQLALCHEMY_DATABASE_URI = DATABASE_URL.replace('mysql://', 'mysql+pymysql://', 1)
+        else:
+            SQLALCHEMY_DATABASE_URI = DATABASE_URL
+        print(f"DEBUG: Using DATABASE_URL: {SQLALCHEMY_DATABASE_URI}")
+    else:
+        SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'
+        print(f"DEBUG: Using fallback SQLite: {SQLALCHEMY_DATABASE_URI}")
+    
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'your-jwt-secret-here'
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=24)
