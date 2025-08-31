@@ -181,10 +181,8 @@ cd backend
 
 ## 🚀 Live Demo
 
-**Frontend (Netlify):** [Your Netlify URL]
+**Frontend (Netlify):** https://mindwell-wellness.netlify.app
 **Backend API (Railway):** https://hackathon-project-production-d817.up.railway.app
-
-*Note: Replace "Your Netlify URL" with your actual Netlify deployment URL*
 
 ---
 
