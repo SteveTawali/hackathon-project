@@ -2,6 +2,32 @@
 
 A comprehensive mental wellness application with Flask backend and React frontend, designed to help users track mood, maintain journals with AI insights, build healthy habits, practice meditation, and access crisis support resources.
 
+## Features
+
+### 🎯 Core Features
+- **Mood Tracking:** Visual mood logging with trend analysis and history.
+- **AI-Powered Journal:** Rich text entries, sentiment analysis, and smart prompts.
+- **Habit Tracking:** Create, manage, and log habits with streaks and progress visualization.
+- **Meditation & Breathing:** Guided exercises, customizable timers, and relaxation tools.
+- **Crisis Support:** SOS resources, emergency contacts, and mental health tools.
+- **Dashboard:** Beautiful overview with charts, stats, and personalized insights.
+- **Dark Mode:** Toggle between light and dark themes for comfort.
+- **Authentication:** Secure login, registration, and user profile management.
+- **Contact Us:** Built-in support form and direct contact options.
+
+### 🤖 AI Integration
+- Sentiment analysis for journal entries.
+- Personalized daily affirmations.
+- Mood-based journal prompts.
+- Wellness insights and recommendations.
+
+### 🔒 Security Features
+- JWT authentication with refresh tokens.
+- Password strength validation.
+- Input sanitization and validation.
+- CORS configuration.
+- Rate limiting
+
 ## Project Structure
 
 ```
@@ -30,29 +56,6 @@ mindwell/
 │   └── run.py            # Application entry point
 └── README.md             # This file
 ```
-
-## Features
-
-### 🎯 Core Features
-- **Mood Tracking**: Visual mood logging with trend analysis
-- **AI-Powered Journal**: Rich text entries with sentiment analysis
-- **Habit Tracking**: Comprehensive habit management with streaks
-- **Meditation & Breathing**: Interactive exercises and timers
-- **Crisis Support**: SOS resources and mental health tools
-- **Dashboard**: Beautiful overview with charts and insights
-
-### 🤖 AI Integration
-- Sentiment analysis for journal entries
-- Personalized daily affirmations
-- Mood-based journal prompts
-- Wellness insights and recommendations
-
-### 🔒 Security Features
-- JWT authentication with refresh tokens
-- Password strength validation
-- Input sanitization and validation
-- CORS configuration
-- Rate limiting
 
 ## Quick Start
 
@@ -166,21 +169,102 @@ cd backend
 # Deploy to your Python hosting service (Heroku, AWS, etc.)
 ```
 
-## Contributing
+## Screenshots & Demo
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+![Dashboard Screenshot](./screenshots/dashboard.png)
+![Mood Tracker](.screenshots/moodtracker.png)
+![Journal Screenshot](.screenshots/journal)
+![Habit Tracker](./screenshots/habittracker.png)
+![Meditation](./screenshots/meditation.png)
+![Pricing](./screenshots/pricing.png)
+![Emergency](./screenshots/emergency.png)
+
+[Live Demo](http://hackathon-project-murex.vercel.app)
+
+---
+
+## Getting Started
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/SteveTawali/hackathon-project.git
+   ```
+2. Install dependencies for frontend and backend (see instructions above).
+3. Configure environment variables as needed.
+4. Run frontend and backend servers.
+5. Open your browser at `http://localhost:8080` (frontend) and `http://localhost:5000` (backend API).
+
+---
+
+## Usage Guide
+
+- **Register/Login:** Create an account or log in to access personalized features.
+- **Dashboard:** View your mood, habits, and recent journal entries.
+- **Mood Tracking:** Log your mood daily and view trends.
+- **Journal:** Write and analyze your thoughts with AI-powered insights.
+- **Habits:** Track and manage your wellness habits.
+- **Meditation:** Use guided exercises and timers for relaxation.
+- **Community:** Post updates, interact, and support others.
+- **SOS Support:** Access crisis resources and contact support.
+- **Dark Mode:** Toggle theme for comfort.
+
+---
+
+## FAQ
+
+**Q: Is MindWell free to use?**
+A: Yes, core features are free. Premium features may require a subscription.
+
+**Q: How is my data protected?**
+A: All data is securely stored and never shared without your consent.
+
+**Q: Can I use MindWell on mobile?**
+A: Yes, the app is fully responsive and works on all devices.
+
+---
+
+## Roadmap
+
+- [x] Core wellness features
+- [x] Dark mode
+- [ ] Community feed
+- [ ] Mobile app
+- [ ] More AI integrations
+- [ ] Group support sessions
+- [ ] Push notifications
+
+---
+
+## Credits
+
+- [Lucide Icons](https://lucide.dev/)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [OpenAI](https://openai.com/)
+- All contributors and testers
+
+---
+
+## Contributors
+Steven Gulu
+Stephen Muhindi
+
+---
+
+## Contact & Support
+
+For support, open an issue on GitHub or email [stephenmuhindi903@gmail.com](mailto:stephenmuhindi903@gmail.com).
+
+---
+
+## Changelog
+
+- v1.0.0: Initial release
+
+---
 
 ## License
 
 This project is licensed under the MIT License.
-
-## Support
-
-For support and questions, please open an issue on GitHub or contact the development team.
 
 ---
 
