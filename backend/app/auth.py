@@ -16,20 +16,20 @@ def register():
         
         # Validation
         if not username or not email or not password:
-            return jsonify({'error': 'Missing required fields'}), 400
+            return jsonify({'error': 'Please fill in all required fields (username, email, and password)'}), 400
         
         if len(password) < 6:
-            return jsonify({'error': 'Password must be at least 6 characters'}), 400
+            return jsonify({'error': 'Password must be at least 6 characters long. Please choose a stronger password.'}), 400
         
         if not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', email):
-            return jsonify({'error': 'Invalid email format'}), 400
+            return jsonify({'error': 'Please enter a valid email address (e.g., user@example.com)'}), 400
         
         # Check if user exists
         if User.query.filter_by(username=username).first():
-            return jsonify({'error': 'Username already exists'}), 400
+            return jsonify({'error': f'The username "{username}" is already taken. Please choose a different username.'}), 400
         
         if User.query.filter_by(email=email).first():
-            return jsonify({'error': 'Email already exists'}), 400
+            return jsonify({'error': f'An account with the email "{email}" already exists. Please use a different email or try logging in instead.'}), 400
         
         # Create user
         user = User(username=username, email=email)
@@ -42,7 +42,7 @@ def register():
         access_token = create_access_token(identity=str(user.id))
         
         return jsonify({
-            'message': 'User created successfully',
+            'message': 'Account created successfully! Welcome to MindWell!',
             'access_token': access_token,
             'user': {
                 'id': user.id,
@@ -52,7 +52,7 @@ def register():
         }), 201
         
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': 'Something went wrong while creating your account. Please try again.'}), 500
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
@@ -62,7 +62,7 @@ def login():
         password = data.get('password')
         
         if not username or not password:
-            return jsonify({'error': 'Missing username or password'}), 400
+            return jsonify({'error': 'Please enter both your username/email and password'}), 400
         
         # Find user by username or email
         user = User.query.filter(
@@ -70,12 +70,13 @@ def login():
         ).first()
         
         if not user or not user.check_password(password):
-            return jsonify({'error': 'Invalid credentials'}), 401
+            return jsonify({'error': 'Invalid username/email or password. Please check your credentials and try again.'}), 401
         
         # Create token
         access_token = create_access_token(identity=str(user.id))
         
         return jsonify({
+            'message': 'Welcome back to MindWell!',
             'access_token': access_token,
             'user': {
                 'id': user.id,
@@ -85,7 +86,7 @@ def login():
         })
         
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': 'Something went wrong while signing you in. Please try again.'}), 500
 
 @auth_bp.route('/profile', methods=['GET'])
 @jwt_required()
@@ -95,7 +96,7 @@ def get_profile():
         user = User.query.get(user_id)
         
         if not user:
-            return jsonify({'error': 'User not found'}), 404
+            return jsonify({'error': 'Your account could not be found. Please try logging in again.'}), 404
         
         return jsonify({
             'user': {
@@ -107,4 +108,4 @@ def get_profile():
         })
         
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': 'Something went wrong while loading your profile. Please try again.'}), 500
