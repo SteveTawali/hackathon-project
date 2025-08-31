@@ -1,5 +1,7 @@
 # Environment variables and secrets
 backend/.env
+backend/.env.current
+backend/.env.staging
 backend/token.txt
 *.env
 .env.local
